@@ -1,30 +1,14 @@
 package com.epam.mentoring.rocket.dto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
-public class UserDto {
+public class UserData {
 
     private Long id;
-
-    @NotBlank
-    @Size(min = 1, max = 255)
     private String firstName;
-
-    @NotBlank
-    @Size(min = 1, max = 255)
     private String lastName;
-
-    @NotBlank
-    @Size(min = 6, max = 255)
     private String email;
-
-    @NotBlank
-    @Size(min = 1, max = 60)
     private String password;
 
-    public UserDto() {
+    public UserData() {
     }
 
     public Long getId() {

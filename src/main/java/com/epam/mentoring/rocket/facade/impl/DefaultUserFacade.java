@@ -1,6 +1,6 @@
 package com.epam.mentoring.rocket.facade.impl;
 
-import com.epam.mentoring.rocket.dto.UserDto;
+import com.epam.mentoring.rocket.dto.UserData;
 import com.epam.mentoring.rocket.facade.UserFacade;
 import com.epam.mentoring.rocket.facade.converter.user.UserConverter;
 import com.epam.mentoring.rocket.facade.converter.user.UserReverseConverter;
@@ -27,25 +27,25 @@ public class DefaultUserFacade implements UserFacade {
     private UserReverseConverter userReverseConverter;
 
     @Override
-    public UserDto getUserById(Long id) {
+    public UserData getUserById(Long id) {
         User user = userService.getUserById(id);
         return userConverter.convert(user);
     }
 
     @Override
-    public List<UserDto> getAllUsers() {
+    public List<UserData> getAllUsers() {
         return emptyIfNull(userService.getAllUsers()).stream()
                 .map(userConverter::convert)
                 .collect(toList());
     }
 
     @Override
-    public void insertUser(UserDto user) {
+    public void insertUser(UserData user) {
         userService.insertUser(userReverseConverter.reverseConvert(user));
     }
 
     @Override
-    public void updateUser(UserDto user) {
+    public void updateUser(UserData user) {
         userService.updateUser(userReverseConverter.reverseConvert(user));
     }
 

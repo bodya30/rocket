@@ -1,18 +1,18 @@
 package com.epam.mentoring.rocket.facade;
 
-import com.epam.mentoring.rocket.dto.UserDto;
+import com.epam.mentoring.rocket.dto.UserData;
 
 import java.util.List;
 
 public interface UserFacade {
 
-    UserDto getUserById(Long id);
+    UserData getUserById(Long id);
 
-    List<UserDto> getAllUsers();
+    List<UserData> getAllUsers();
 
-    void insertUser(UserDto user);
+    void insertUser(UserData user);
 
-    void updateUser(UserDto user);
+    void updateUser(UserData user);
 
     void removeUser(Long id);
 }

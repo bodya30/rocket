@@ -1,11 +1,11 @@
 package com.epam.mentoring.rocket.facade.converter.user;
 
-import com.epam.mentoring.rocket.dto.UserDto;
+import com.epam.mentoring.rocket.dto.UserData;
 import com.epam.mentoring.rocket.facade.converter.ReverseConverter;
 import com.epam.mentoring.rocket.model.User;
 
-public interface UserReverseConverter extends ReverseConverter<User, UserDto> {
+public interface UserReverseConverter extends ReverseConverter<User, UserData> {
 
     @Override
-    User reverseConvert(UserDto target);
+    User reverseConvert(UserData target);
 }
