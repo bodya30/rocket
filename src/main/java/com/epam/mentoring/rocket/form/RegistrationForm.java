@@ -1,16 +1,17 @@
 package com.epam.mentoring.rocket.form;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 public class RegistrationForm {
 
     @NotBlank(message = "First name must not be empty")
-    @Size(min = 1, max = 255, message = "First name must be between 1 and 255 characters")
+    @Pattern(regexp = "^\\p{L}{2,255}$", message = "First name must be between 2 and 255 consecutive letters")
     private String firstName;
 
     @NotBlank(message = "Last name must not be empty")
-    @Size(min = 1, max = 255, message = "Last name must be between 1 and 255 characters")
+    @Pattern(regexp = "^\\p{L}{2,255}$", message = "Last name must be between 2 and 255 consecutive letters")
     private String lastName;
 
     @NotBlank(message = "Email must not be empty")
