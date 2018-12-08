@@ -1,6 +1,6 @@
-$(document).ready(function() {
+$(document).ready(function () {
 
-    $('#registrationForm').on('submit', function(e) {
+    $('#registrationForm').on('submit', function (e) {
         e.preventDefault();
         var registerUrl = $(this).attr('action');
         var csrfToken = $("meta[name='_csrf']").attr("content");
@@ -11,6 +11,8 @@ $(document).ready(function() {
             "firstName": $('#firstName').val(),
             "lastName": $('#lastName').val(),
             "email": $('#email').val(),
+            "password": $('#password').val(),
+            "confirmPassword": $('#confirmPassword').val()
         };
         data[csrfParameter] = csrfToken;
 
@@ -25,11 +27,14 @@ $(document).ready(function() {
             data: JSON.stringify(data),
             success: function () {
                 $('.js-error').html('');
+                $('.js-register-message').show();
             },
             error: function (response) {
                 $('.js-error').html('');
+                $('.js-register-message').hide();
                 $.each(response.responseJSON, function (field, errors) {
-                    var errorContainer = $('.js-errors-' + field);
+                    var fieldErrorContainer = $('.js-errors-' + field);
+                    var errorContainer = fieldErrorContainer.length ? fieldErrorContainer : $('.js-errors-message');
                     for (i = 0; i < errors.length; i++) {
                         errorContainer.append('<span>' + errors[i] + '</span>');
                     }

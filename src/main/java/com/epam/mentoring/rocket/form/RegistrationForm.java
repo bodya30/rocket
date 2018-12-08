@@ -1,9 +1,13 @@
 package com.epam.mentoring.rocket.form;
 
+import com.epam.mentoring.rocket.validator.annotation.PasswordMatches;
+import com.epam.mentoring.rocket.validator.annotation.ValidEmail;
+import com.epam.mentoring.rocket.validator.annotation.ValidPassword;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Size;
 
+@PasswordMatches
 public class RegistrationForm {
 
     @NotBlank(message = "First name must not be empty")
@@ -14,10 +18,13 @@ public class RegistrationForm {
     @Pattern(regexp = "^\\p{L}{2,255}$", message = "Last name must be between 2 and 255 consecutive letters")
     private String lastName;
 
-    @NotBlank(message = "Email must not be empty")
-    @Size(min = 6, max = 255, message = "Email must be between 6 and 255 characters")
+    @ValidEmail
     private String email;
 
+    @ValidPassword
+    private String password;
+
+    private String confirmPassword;
 
     public String getFirstName() {
         return firstName;
@@ -43,4 +50,19 @@ public class RegistrationForm {
         this.email = email;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getConfirmPassword() {
+        return confirmPassword;
+    }
+
+    public void setConfirmPassword(String confirmPassword) {
+        this.confirmPassword = confirmPassword;
+    }
 }

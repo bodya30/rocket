@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,12 +33,20 @@ public class RegistrationController {
                                           BindingResult bindingResult) {
         ResponseEntity<?> response = ResponseEntity.noContent().build();
         if (bindingResult.hasErrors()) {
-            Map<String, List<String>> errors = bindingResult.getFieldErrors().stream()
-                    .collect(groupingBy(FieldError::getField,
-                            mapping(FieldError::getDefaultMessage, toList())));
+            Map<String, List<String>> errors = bindingResult.getAllErrors().stream()
+                    .collect(groupingBy(this::getErrorKey,
+                            mapping(ObjectError::getDefaultMessage, toList())));
             response = ResponseEntity.badRequest().body(errors);
         }
         return response;
+    }
+
+    private String getErrorKey(ObjectError error) {
+        String key = error.getObjectName();
+        if (error instanceof FieldError) {
+            key = ((FieldError) error).getField();
+        }
+        return key;
     }
 
 }

@@ -30,7 +30,20 @@
             <input id="email" name="email" type="email" maxlength="255" placeholder="your@email.com"/>
             <div class="js-error js-errors-email"></div>
 
+            <label for="password">Password:</label>
+            <input id="password" name="password" type="password" maxlength="30" placeholder="Password"/>
+            <div class="js-error js-errors-password"></div>
+
+            <label for="confirmPassword">Confirm password:</label>
+            <input id="confirmPassword" name="confirmPassword" type="password" maxlength="30" placeholder="Confirm password"/>
+            <div class="js-error js-errors-confirmPassword"></div>
+
+            <div class="js-error js-errors-message"></div>
+
             <button type="submit">Sign Up</button>
+            <span class="js-register-message register-message">
+                Verification link was sent to your email
+            </span>
         </form>
         <script src="${contextPath}/static/js/jquery-3.3.1.min.js"></script>
         <script src="${contextPath}/static/js/main.js"></script>

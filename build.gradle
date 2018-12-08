@@ -35,6 +35,7 @@ dependencies {
 	implementation('org.apache.commons:commons-collections4:4.0')
 	implementation('javax.servlet:jstl')
 	implementation('org.springframework.security:spring-security-taglibs')
+	implementation('org.passay:passay:1.2.0')
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtimeOnly('mysql:mysql-connector-java')
 	runtimeOnly('org.springframework.boot:spring-boot-starter-tomcat')
