@@ -8,11 +8,13 @@ public interface UserFacade {
 
     UserData getUserById(Long id);
 
+    UserData getUserByEmail(String email);
+
     List<UserData> getAllUsers();
 
-    void insertUser(UserData user);
+    UserData insertUser(UserData user);
 
-    void updateUser(UserData user);
+    int updateUser(UserData user);
 
-    void removeUser(Long id);
+    int removeUser(Long id);
 }

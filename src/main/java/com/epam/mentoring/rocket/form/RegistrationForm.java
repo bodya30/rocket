@@ -11,11 +11,11 @@ import javax.validation.constraints.Pattern;
 public class RegistrationForm {
 
     @NotBlank(message = "First name must not be empty")
-    @Pattern(regexp = "^\\p{L}{2,255}$", message = "First name must be between 2 and 255 consecutive letters")
+    @Pattern(regexp = "^[\\p{L}0-9'-]{2,255}$", message = "First name must be between 2 and 255 characters")
     private String firstName;
 
     @NotBlank(message = "Last name must not be empty")
-    @Pattern(regexp = "^\\p{L}{2,255}$", message = "Last name must be between 2 and 255 consecutive letters")
+    @Pattern(regexp = "^[\\p{L}0-9'-]{2,255}$", message = "Last name must be between 2 and 255 characters")
     private String lastName;
 
     @ValidEmail

@@ -33,6 +33,12 @@ public class DefaultUserFacade implements UserFacade {
     }
 
     @Override
+    public UserData getUserByEmail(String email) {
+        User user = userService.getUserByEmail(email);
+        return userConverter.convert(user);
+    }
+
+    @Override
     public List<UserData> getAllUsers() {
         return emptyIfNull(userService.getAllUsers()).stream()
                 .map(userConverter::convert)
@@ -40,18 +46,19 @@ public class DefaultUserFacade implements UserFacade {
     }
 
     @Override
-    public void insertUser(UserData user) {
-        userService.insertUser(userReverseConverter.reverseConvert(user));
+    public UserData insertUser(UserData userData) {
+        User user = userService.insertUser(userReverseConverter.reverseConvert(userData));
+        return userConverter.convert(user);
     }
 
     @Override
-    public void updateUser(UserData user) {
-        userService.updateUser(userReverseConverter.reverseConvert(user));
+    public int updateUser(UserData user) {
+        return userService.updateUser(userReverseConverter.reverseConvert(user));
     }
 
     @Override
-    public void removeUser(Long id) {
-        userService.removeUser(id);
+    public int removeUser(Long id) {
+        return userService.removeUser(id);
     }
 
     public UserService getUserService() {
