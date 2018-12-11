@@ -13,11 +13,14 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Repository
 public class DefaultVerificationTokenDao implements VerificationTokenDao {
 
-    private static final String INSERT_TOKEN = "INSERT INTO token (token, user) VALUES (:token, :userId);";
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    private static final String INSERT_TOKEN = "INSERT INTO token (token, user, expiration) VALUES (:token, :userId, :expiration);";
     private static final String SELECT_BY_TOKEN = "SELECT * FROM token AS t WHERE t.token LIKE :token;";
 
     @Autowired
@@ -37,10 +40,16 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("token", token.getToken())
-                .addValue("userId", token.getUser().getId());
+                .addValue("userId", token.getUser().getId())
+                .addValue("expiration", formatDate(token.getExpiryDate()));
         jdbcTemplate.update(INSERT_TOKEN, params, keyHolder);
         token.setId(keyHolder.getKey().longValue());
         return token;
+    }
+
+    private String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        return sdf.format(date);
     }
 
     public NamedParameterJdbcTemplate getJdbcTemplate() {
@@ -56,6 +65,8 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
             VerificationToken token = new VerificationToken();
             token.setId(rs.getLong("id"));
             token.setToken(rs.getString("token"));
+            Date expiryDate = new Date(rs.getTimestamp("expiration").getTime());
+            token.setExpiryDate(expiryDate);
             User user = new User();
             user.setId(rs.getLong("user"));
             token.setUser(user);

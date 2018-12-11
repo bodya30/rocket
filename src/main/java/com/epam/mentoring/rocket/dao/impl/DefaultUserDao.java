@@ -23,8 +23,8 @@ public class DefaultUserDao implements UserDao {
     private static final String SELECT_USER_BY_ID = "SELECT * FROM user AS u WHERE u.id = :id;";
     private static final String SELECT_USER_BY_EMAL = "SELECT * FROM user AS u WHERE u.email LIKE :email;";
     private static final String SELECT_ALL_USERS = "SELECT * FROM user;";
-    private static final String INSERT_USER = "INSERT INTO user(first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password);";
-    private static final String UPDATE_USER = "UPDATE user SET first_name = :firstName, last_name = :lastName, email = :email, password = :password WHERE id = :id;";
+    private static final String INSERT_USER = "INSERT INTO user(first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password, :enabled);";
+    private static final String UPDATE_USER = "UPDATE user SET first_name = :firstName, last_name = :lastName, email = :email, password = :password, enabled = :enabled WHERE id = :id;";
     private static final String REMOVE_USER = "DELETE FROM user WHERE id = :id;";
 
     @Autowired
@@ -74,6 +74,7 @@ public class DefaultUserDao implements UserDao {
         params.put("lastName", user.getLastName());
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
+        params.put("enabled", user.isEnabled());
         return jdbcTemplate.update(UPDATE_USER, params);
     }
 
@@ -90,6 +91,7 @@ public class DefaultUserDao implements UserDao {
             user.setLastName(rs.getString("last_name"));
             user.setEmail(rs.getString("email"));
             user.setPassword(rs.getString("password"));
+            user.setEnabled(rs.getBoolean("enabled"));
             return user;
         };
     }

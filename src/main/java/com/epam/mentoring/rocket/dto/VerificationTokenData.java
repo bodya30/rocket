@@ -1,23 +1,14 @@
-package com.epam.mentoring.rocket.model;
+package com.epam.mentoring.rocket.dto;
 
 import java.util.Date;
 
-public class VerificationToken {
+public class VerificationTokenData {
 
-    private Long id;
     private String token;
-    private User user;
+    private UserData user;
     private Date expiryDate;
 
-    public VerificationToken() {
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public VerificationTokenData() {
     }
 
     public String getToken() {
@@ -28,11 +19,11 @@ public class VerificationToken {
         this.token = token;
     }
 
-    public User getUser() {
+    public UserData getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserData user) {
         this.user = user;
     }
 

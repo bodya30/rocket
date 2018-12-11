@@ -1,10 +1,11 @@
 package com.epam.mentoring.rocket.facade;
 
-import com.epam.mentoring.rocket.model.VerificationToken;
+import com.epam.mentoring.rocket.dto.UserData;
+import com.epam.mentoring.rocket.dto.VerificationTokenData;
 
 public interface VerificationTokenFacade {
 
-    VerificationToken getByToken(String token);
+    VerificationTokenData getByToken(String token);
 
-    VerificationToken insertToken(VerificationToken token);
+    void sendEmailWithToken(UserData user);
 }
