@@ -23,7 +23,7 @@ public class DefaultUserDao implements UserDao {
     private static final String SELECT_USER_BY_ID = "SELECT * FROM user AS u WHERE u.id = :id;";
     private static final String SELECT_USER_BY_EMAL = "SELECT * FROM user AS u WHERE u.email LIKE :email;";
     private static final String SELECT_ALL_USERS = "SELECT * FROM user;";
-    private static final String INSERT_USER = "INSERT INTO user(first_name, last_name, email, password) VALUES (:firstName, :lastName, :email, :password, :enabled);";
+    private static final String INSERT_USER = "INSERT INTO user(first_name, last_name, email, password, enabled) VALUES (:firstName, :lastName, :email, :password, :enabled);";
     private static final String UPDATE_USER = "UPDATE user SET first_name = :firstName, last_name = :lastName, email = :email, password = :password, enabled = :enabled WHERE id = :id;";
     private static final String REMOVE_USER = "DELETE FROM user WHERE id = :id;";
 
@@ -60,7 +60,8 @@ public class DefaultUserDao implements UserDao {
                 .addValue("firstName", user.getFirstName())
                 .addValue("lastName", user.getLastName())
                 .addValue("email", user.getEmail())
-                .addValue("password", user.getPassword());
+                .addValue("password", user.getPassword())
+                .addValue("enabled", user.isEnabled());
         jdbcTemplate.update(INSERT_USER, params, keyHolder);
         user.setId(keyHolder.getKey().longValue());
         return user;

@@ -7,5 +7,5 @@ public interface VerificationTokenService {
 
     VerificationToken getByToken(String token);
 
-    void sendTokenToUser(User user);
+    void sendTokenToUser(User user, String appUrl);
 }

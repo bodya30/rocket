@@ -5,14 +5,12 @@ import org.springframework.context.ApplicationEvent;
 public class RegistrationEmailEvent extends ApplicationEvent {
 
     private String email;
-    private String appUrl;
-    private String token;
+    private String confirmationUrl;
 
-    public RegistrationEmailEvent(String email, String appUrl, String token) {
-        super(token);
+    public RegistrationEmailEvent(String email, String confirmationUrl) {
+        super(email);
         this.email = email;
-        this.appUrl = appUrl;
-        this.token = token;
+        this.confirmationUrl = confirmationUrl;
     }
 
     public String getEmail() {
@@ -23,19 +21,11 @@ public class RegistrationEmailEvent extends ApplicationEvent {
         this.email = email;
     }
 
-    public String getAppUrl() {
-        return appUrl;
+    public String getConfirmationUrl() {
+        return confirmationUrl;
     }
 
-    public void setAppUrl(String appUrl) {
-        this.appUrl = appUrl;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
+    public void setConfirmationUrl(String confirmationUrl) {
+        this.confirmationUrl = confirmationUrl;
     }
 }

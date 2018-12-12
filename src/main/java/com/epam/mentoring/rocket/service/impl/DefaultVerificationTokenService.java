@@ -33,19 +33,35 @@ public class DefaultVerificationTokenService implements VerificationTokenService
     @Value("${verification.token.expiration.minutes}")
     private int expirationDateInMinutes;
 
+    @Value("${verification.token.url}")
+    private String verificationUrl;
+
     @Override
     public VerificationToken getByToken(String token) {
         VerificationToken verificationToken = tokenDao.getByToken(token);
-        User user = userDao.getUserById(verificationToken.getUser().getId());
-        verificationToken.setUser(user);
+        if (verificationToken != null) {
+            User user = userDao.getUserById(verificationToken.getUser().getId());
+            verificationToken.setUser(user);
+        }
         return verificationToken;
     }
 
     @Override
-    public void sendTokenToUser(User user) {
+    public void sendTokenToUser(User user, String appUrl) {
         VerificationToken token = createTokenForUser(user);
-        // TODO: 12.12.2018 App URL ????
-//        eventPublisher.publishEvent(new RegistrationEmailEvent(user.getEmail(), ));
+        String tokenString = token.getToken();
+        String confirmationUrl = buildConfirmationUrl(appUrl, tokenString);
+        RegistrationEmailEvent event = new RegistrationEmailEvent(user.getEmail(), confirmationUrl);
+        eventPublisher.publishEvent(event);
+    }
+
+    private String buildConfirmationUrl(String appUrl, String token) {
+        StringBuilder builder = new StringBuilder();
+        builder.append(appUrl);
+        builder.append(verificationUrl);
+        builder.append("?token=");
+        builder.append(token);
+        return builder.toString();
     }
 
     private VerificationToken createTokenForUser(User user) {
@@ -69,5 +85,37 @@ public class DefaultVerificationTokenService implements VerificationTokenService
 
     public void setTokenDao(VerificationTokenDao tokenDao) {
         this.tokenDao = tokenDao;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public ApplicationEventPublisher getEventPublisher() {
+        return eventPublisher;
+    }
+
+    public void setEventPublisher(ApplicationEventPublisher eventPublisher) {
+        this.eventPublisher = eventPublisher;
+    }
+
+    public int getExpirationDateInMinutes() {
+        return expirationDateInMinutes;
+    }
+
+    public void setExpirationDateInMinutes(int expirationDateInMinutes) {
+        this.expirationDateInMinutes = expirationDateInMinutes;
+    }
+
+    public String getVerificationUrl() {
+        return verificationUrl;
+    }
+
+    public void setVerificationUrl(String verificationUrl) {
+        this.verificationUrl = verificationUrl;
     }
 }
