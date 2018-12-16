@@ -1,5 +1,7 @@
 package com.epam.mentoring.rocket.model;
 
+import java.util.List;
+
 public class User {
 
     private Long id;
@@ -8,6 +10,7 @@ public class User {
     private String email;
     private String password;
     private boolean enabled;
+    private List<Authority> authorities;
 
     public User() {
     }
@@ -58,5 +61,13 @@ public class User {
 
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
+    }
+
+    public List<Authority> getAuthorities() {
+        return authorities;
+    }
+
+    public void setAuthorities(List<Authority> authorities) {
+        this.authorities = authorities;
     }
 }
