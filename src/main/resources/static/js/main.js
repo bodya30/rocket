@@ -32,13 +32,17 @@ $(document).ready(function () {
             error: function (response) {
                 $('.js-error').html('');
                 $('.js-register-message').hide();
-                $.each(response.responseJSON, function (field, errors) {
-                    var fieldErrorContainer = $('.js-errors-' + field);
-                    var errorContainer = fieldErrorContainer.length ? fieldErrorContainer : $('.js-errors-message');
-                    for (i = 0; i < errors.length; i++) {
-                        errorContainer.append('<span>' + errors[i] + '</span>');
-                    }
-                });
+                if (response.status === 500) {
+                    $('.js-errors-message').append('<span>Something went wrong, please contact us +380 095 111 22 33</span>')
+                } else {
+                    $.each(response.responseJSON, function (field, errors) {
+                        var fieldErrorContainer = $('.js-errors-' + field);
+                        var errorContainer = fieldErrorContainer.length ? fieldErrorContainer : $('.js-errors-message');
+                        for (i = 0; i < errors.length; i++) {
+                            errorContainer.append('<span>' + errors[i] + '</span>');
+                        }
+                    });
+                }
             }
         });
     });

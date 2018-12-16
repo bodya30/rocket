@@ -61,6 +61,13 @@ public class DefaultUserFacade implements UserFacade {
         return userService.removeUser(id);
     }
 
+    @Override
+    public void activateUser(UserData userData) {
+        User user = userService.getUserById(userData.getId());
+        user.setEnabled(true);
+        userService.updateUser(user);
+    }
+
     public UserService getUserService() {
         return userService;
     }

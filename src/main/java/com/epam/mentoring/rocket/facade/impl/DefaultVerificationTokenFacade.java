@@ -10,6 +10,7 @@ import com.epam.mentoring.rocket.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Calendar;
 import java.util.Optional;
 
 @Component
@@ -26,13 +27,18 @@ public class DefaultVerificationTokenFacade implements VerificationTokenFacade {
 
     @Override
     public Optional<VerificationTokenData> getByToken(String token) {
-        return Optional.ofNullable(tokenService.getByToken(token)).map(tokenConverter::convert);
+        return tokenService.getByToken(token).map(tokenConverter::convert);
     }
 
     @Override
     public void sendEmailWithToken(UserData userData, String appUrl) {
         User user = userReverseConverter.reverseConvert(userData);
         tokenService.sendTokenToUser(user, appUrl);
+    }
+
+    @Override
+    public boolean checkTokenExpirationDate(VerificationTokenData token) {
+        return token.getExpiryDate().getTime() >= Calendar.getInstance().getTime().getTime();
     }
 
     public VerificationTokenService getTokenService() {

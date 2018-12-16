@@ -14,11 +14,14 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -26,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.epam.mentoring.rocket.controller.ControllerConstants.REDIRECT_PREFIX;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonMap;
 import static java.util.stream.Collectors.groupingBy;
@@ -36,7 +40,10 @@ import static java.util.stream.Collectors.toList;
 @RequestMapping("/registration")
 public class RegistrationController {
 
+    private static final String CONFIRMATION_FAILED_URL = "/registration/confirm-failed";
     private static final String HOST_HEADER = "Host";
+    private static final String STATUS_KEY = "status";
+    private static final String MESSAGE_KEY = "message";
 
     @Autowired
     private UserFacade userFacade;
@@ -47,18 +54,6 @@ public class RegistrationController {
     @GetMapping
     public String showPage() {
         return "registration";
-    }
-
-    @GetMapping("/confirm")
-    public String confirmRegistration(@RequestParam("token") String token, Model model) {
-        Optional<VerificationTokenData> tokenOptional = tokenFacade.getByToken(token);
-        if (!tokenOptional.isPresent()) {
-            model.addAttribute("message", "Token is invalid");
-            model.addAttribute("status", HttpStatus.BAD_REQUEST);
-            return "redirect:" + "/error";
-        }
-        // TODO: 12.12.2018 Check token expiration, implement userFacade.activateUser, add pages
-        return "redirect:" + "/registration";
     }
 
     @PostMapping("/register")
@@ -123,4 +118,41 @@ public class RegistrationController {
         return scheme + "://" + host + contextPath;
     }
 
+    @GetMapping("/confirm")
+    public String confirmRegistration(@RequestParam("token") String token, RedirectAttributes attributes) {
+        String resultView = REDIRECT_PREFIX + CONFIRMATION_FAILED_URL;
+        Optional<VerificationTokenData> tokenOptional = tokenFacade.getByToken(token);
+        if (tokenOptional.isPresent()) {
+            VerificationTokenData verificationToken = tokenOptional.get();
+            resultView = checkTokenExpiryDate(verificationToken, attributes);
+        } else {
+            attributes.addFlashAttribute(MESSAGE_KEY, "Verification token is invalid");
+        }
+        return resultView;
+    }
+
+    private String checkTokenExpiryDate(VerificationTokenData verificationToken, RedirectAttributes attributes) {
+        String resultView = REDIRECT_PREFIX + CONFIRMATION_FAILED_URL;
+        if (tokenFacade.checkTokenExpirationDate(verificationToken)) {
+            userFacade.activateUser(verificationToken.getUser());
+            resultView = REDIRECT_PREFIX + "/login";
+        } else {
+            attributes.addFlashAttribute(MESSAGE_KEY, "Verification token expired");
+        }
+        return resultView;
+    }
+
+    @GetMapping("/confirm-failed")
+    public String showConfirmationFailed(Model model) {
+        model.addAttribute(STATUS_KEY, HttpStatus.BAD_REQUEST.value());
+        return "error";
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public String handleException(Exception ex, Model model) {
+        model.addAttribute(STATUS_KEY, HttpStatus.INTERNAL_SERVER_ERROR.value());
+        model.addAttribute(MESSAGE_KEY, ex.getMessage());
+        return REDIRECT_PREFIX + "error";
+    }
 }

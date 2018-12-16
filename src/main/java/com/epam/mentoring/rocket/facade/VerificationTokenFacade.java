@@ -10,4 +10,6 @@ public interface VerificationTokenFacade {
     Optional<VerificationTokenData> getByToken(String token);
 
     void sendEmailWithToken(UserData user, String appUrl);
+
+    boolean checkTokenExpirationDate(VerificationTokenData token);
 }

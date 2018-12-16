@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -37,13 +38,14 @@ public class DefaultVerificationTokenService implements VerificationTokenService
     private String verificationUrl;
 
     @Override
-    public VerificationToken getByToken(String token) {
-        VerificationToken verificationToken = tokenDao.getByToken(token);
-        if (verificationToken != null) {
-            User user = userDao.getUserById(verificationToken.getUser().getId());
-            verificationToken.setUser(user);
-        }
-        return verificationToken;
+    public Optional<VerificationToken> getByToken(String token) {
+        return Optional.ofNullable(tokenDao.getByToken(token)).map(this::setUser);
+    }
+
+    private VerificationToken setUser(VerificationToken token) {
+        User user = userDao.getUserById(token.getUser().getId());
+        token.setUser(user);
+        return token;
     }
 
     @Override
