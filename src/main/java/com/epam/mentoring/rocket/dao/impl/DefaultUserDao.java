@@ -10,6 +10,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
@@ -29,6 +30,9 @@ public class DefaultUserDao implements UserDao {
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public User getUserById(Long id) {
@@ -60,7 +64,7 @@ public class DefaultUserDao implements UserDao {
                 .addValue("firstName", user.getFirstName())
                 .addValue("lastName", user.getLastName())
                 .addValue("email", user.getEmail())
-                .addValue("password", user.getPassword())
+                .addValue("password", passwordEncoder.encode(user.getPassword()))
                 .addValue("enabled", user.isEnabled());
         jdbcTemplate.update(INSERT_USER, params, keyHolder);
         user.setId(keyHolder.getKey().longValue());
@@ -103,5 +107,13 @@ public class DefaultUserDao implements UserDao {
 
     public void setJdbcTemplate(NamedParameterJdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }

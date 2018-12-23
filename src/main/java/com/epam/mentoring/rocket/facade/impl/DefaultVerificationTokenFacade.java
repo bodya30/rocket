@@ -27,7 +27,7 @@ public class DefaultVerificationTokenFacade implements VerificationTokenFacade {
 
     @Override
     public Optional<VerificationTokenData> getByToken(String token) {
-        return tokenService.getByToken(token).map(tokenConverter::convert);
+        return tokenService.getTokenByTokenString(token).map(tokenConverter::convert);
     }
 
     @Override

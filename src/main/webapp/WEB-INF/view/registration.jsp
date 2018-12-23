@@ -13,7 +13,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
         <sec:csrfMetaTags />
         <link rel="stylesheet" type="text/css" href="${contextPath}/static/css/registration.css"/>
-        <link rel='shortcut icon' type='image/x-icon' href='${contextPath}/static/favicon.ico' />
+        <link rel="shortcut icon" type="image/x-icon" href="${contextPath}/static/favicon.ico" />
     </head>
     <body>
         <form  id="registrationForm" action="${registerUrl}" method="post">

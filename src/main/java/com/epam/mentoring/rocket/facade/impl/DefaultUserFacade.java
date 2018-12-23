@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
@@ -27,15 +28,13 @@ public class DefaultUserFacade implements UserFacade {
     private UserReverseConverter userReverseConverter;
 
     @Override
-    public UserData getUserById(Long id) {
-        User user = userService.getUserById(id);
-        return userConverter.convert(user);
+    public Optional<UserData> getUserById(Long id) {
+        return userService.getUserById(id).map(userConverter::convert);
     }
 
     @Override
-    public UserData getUserByEmail(String email) {
-        User user = userService.getUserByEmail(email);
-        return userConverter.convert(user);
+    public Optional<UserData> getUserByEmail(String email) {
+        return userService.getUserByEmail(email).map(userConverter::convert);
     }
 
     @Override
@@ -63,9 +62,10 @@ public class DefaultUserFacade implements UserFacade {
 
     @Override
     public void activateUser(UserData userData) {
-        User user = userService.getUserById(userData.getId());
-        user.setEnabled(true);
-        userService.updateUser(user);
+        userService.getUserById(userData.getId()).ifPresent(user -> {
+            user.setEnabled(true);
+            userService.updateUser(user);
+        });
     }
 
     public UserService getUserService() {

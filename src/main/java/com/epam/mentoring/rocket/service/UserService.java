@@ -3,12 +3,13 @@ package com.epam.mentoring.rocket.service;
 import com.epam.mentoring.rocket.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserService {
 
-    User getUserById(Long id);
+    Optional<User> getUserById(Long id);
 
-    User getUserByEmail(String email);
+    Optional<User> getUserByEmail(String email);
 
     List<User> getAllUsers();
 

@@ -7,7 +7,11 @@ import java.util.Optional;
 
 public interface VerificationTokenService {
 
-    Optional<VerificationToken> getByToken(String token);
+    VerificationToken insertTokenForUser(User user);
+
+    Optional<VerificationToken> getTokenByTokenString(String token);
+
+    Optional<VerificationToken> getTokenByUser(User user);
 
     void sendTokenToUser(User user, String appUrl);
 }

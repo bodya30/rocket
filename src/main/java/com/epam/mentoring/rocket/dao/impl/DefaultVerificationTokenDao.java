@@ -22,14 +22,24 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
     private static final String INSERT_TOKEN = "INSERT INTO token (token, user, expiration) VALUES (:token, :userId, :expiration);";
     private static final String SELECT_BY_TOKEN = "SELECT * FROM token AS t WHERE t.token LIKE :token;";
+    private static final String SELECT_BY_USER = "SELECT * FROM token AS t WHERE t.user = :userId;";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public VerificationToken getByToken(String token) {
+    public VerificationToken getTokenByTokenString(String token) {
         try {
             return jdbcTemplate.queryForObject(SELECT_BY_TOKEN, new MapSqlParameterSource("token", token), getRowMapper());
+        } catch (EmptyResultDataAccessException e) {
+            return null;
+        }
+    }
+
+    @Override
+    public VerificationToken getTokenByUser(User user) {
+        try {
+            return jdbcTemplate.queryForObject(SELECT_BY_USER, new MapSqlParameterSource("userId", user.getId()), getRowMapper());
         } catch (EmptyResultDataAccessException e) {
             return null;
         }

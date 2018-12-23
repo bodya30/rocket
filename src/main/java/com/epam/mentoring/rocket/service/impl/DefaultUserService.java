@@ -7,6 +7,7 @@ import com.epam.mentoring.rocket.model.Authority;
 import com.epam.mentoring.rocket.model.AuthorityName;
 import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.service.UserService;
+import com.epam.mentoring.rocket.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
@@ -34,18 +36,17 @@ public class DefaultUserService implements UserService, UserDetailsService {
     @Autowired
     private AuthorityDao authorityDao;
 
+    @Autowired
+    private VerificationTokenService tokenService;
+
     @Override
-    public User getUserById(Long id) {
-        User user = userDao.getUserById(id);
-        setUserAuthorities(user);
-        return user;
+    public Optional<User> getUserById(Long id) {
+        return Optional.ofNullable(userDao.getUserById(id)).map(this::setUserAuthorities);
     }
 
     @Override
-    public User getUserByEmail(String email) {
-        User user = userDao.getUserByEmail(email);
-        setUserAuthorities(user);
-        return user;
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.ofNullable(userDao.getUserByEmail(email)).map(this::setUserAuthorities);
     }
 
     @Override
@@ -57,19 +58,21 @@ public class DefaultUserService implements UserService, UserDetailsService {
         return users;
     }
 
-    private void setUserAuthorities(User user) {
+    private User setUserAuthorities(User user) {
         List<Authority> authorities = authorityDao.getAuthoritiesByUserId(user.getId());
         user.setAuthorities(authorities);
+        return user;
     }
 
     @Override
     public User insertUser(User user) {
         String email = user.getEmail();
-        if (getUserByEmail(email) != null) {
+        if (getUserByEmail(email).isPresent()) {
             throw new EmailExistsException("User with email" + email + "already exists");
         }
         User insertedUser = userDao.insertUser(user);
         insertUserAuthorities(user);
+        tokenService.insertTokenForUser(user);
         return insertedUser;
     }
 
@@ -90,17 +93,20 @@ public class DefaultUserService implements UserService, UserDetailsService {
 
     @Override
     public int removeUser(Long id) {
-        User user = getUserById(id);
-        emptyIfNull(user.getAuthorities()).forEach(authority -> authorityDao.removeAuthorityForUser(authority, user));
-        return userDao.removeUser(id);
+        int removedQuantity = 0;
+        Optional<User> userOptional = getUserById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            emptyIfNull(user.getAuthorities()).forEach(authority -> authorityDao.removeAuthorityForUser(authority, user));
+            removedQuantity = userDao.removeUser(id);
+        }
+        return removedQuantity;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        User user = userDao.getUserByEmail(email);
-        if (user == null) {
-            throw new UsernameNotFoundException("No user found with username: " + email);
-        }
+        User user = getUserByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("No user found with username: " + email));
         return new org.springframework.security.core.userdetails.User(email, user.getPassword(),
                 user.isEnabled(), true, true, true,
                 getGrantedAuthorities(user.getAuthorities()));

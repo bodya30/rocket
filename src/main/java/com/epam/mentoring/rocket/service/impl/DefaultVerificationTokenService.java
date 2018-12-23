@@ -37,9 +37,12 @@ public class DefaultVerificationTokenService implements VerificationTokenService
     @Value("${verification.token.url}")
     private String verificationUrl;
 
+    @Value("${verification.token.request.parameter.name}")
+    private String tokenParameter;
+
     @Override
-    public Optional<VerificationToken> getByToken(String token) {
-        return Optional.ofNullable(tokenDao.getByToken(token)).map(this::setUser);
+    public Optional<VerificationToken> getTokenByTokenString(String token) {
+        return Optional.ofNullable(tokenDao.getTokenByTokenString(token)).map(this::setUser);
     }
 
     private VerificationToken setUser(VerificationToken token) {
@@ -50,23 +53,34 @@ public class DefaultVerificationTokenService implements VerificationTokenService
 
     @Override
     public void sendTokenToUser(User user, String appUrl) {
-        VerificationToken token = createTokenForUser(user);
-        String tokenString = token.getToken();
-        String confirmationUrl = buildConfirmationUrl(appUrl, tokenString);
-        RegistrationEmailEvent event = new RegistrationEmailEvent(user.getEmail(), confirmationUrl);
-        eventPublisher.publishEvent(event);
+        Optional<VerificationToken> tokenOptional = getTokenByUser(user);
+        if (tokenOptional.isPresent()) {
+            VerificationToken token = tokenOptional.get();
+            String tokenString = token.getToken();
+            String confirmationUrl = buildConfirmationUrl(appUrl, tokenString);
+            RegistrationEmailEvent event = new RegistrationEmailEvent(user.getEmail(), confirmationUrl);
+            eventPublisher.publishEvent(event);
+        } else {
+            throw new IllegalStateException("No token for user found");
+        }
     }
 
     private String buildConfirmationUrl(String appUrl, String token) {
         StringBuilder builder = new StringBuilder();
         builder.append(appUrl);
         builder.append(verificationUrl);
-        builder.append("?token=");
+        builder.append("?" + tokenParameter + "=");
         builder.append(token);
         return builder.toString();
     }
 
-    private VerificationToken createTokenForUser(User user) {
+    @Override
+    public Optional<VerificationToken> getTokenByUser(User user) {
+        return Optional.ofNullable(tokenDao.getTokenByUser(user)).map(this::setUser);
+    }
+
+    @Override
+    public VerificationToken insertTokenForUser(User user) {
         VerificationToken token = new VerificationToken();
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
