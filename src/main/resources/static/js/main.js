@@ -2,6 +2,7 @@ $(document).ready(function () {
 
     $('#registrationForm').on('submit', function (e) {
         e.preventDefault();
+        $('#submitButton').prop('disabled', true);
         var registerUrl = $(this).attr('action');
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfParameter = $("meta[name='_csrf_parameter']").attr("content");
@@ -28,6 +29,7 @@ $(document).ready(function () {
             success: function () {
                 $('.js-error').html('');
                 $('.js-register-message').show();
+                $('#submitButton').prop('disabled', false);
             },
             error: function (response) {
                 $('.js-error').html('');
@@ -43,7 +45,8 @@ $(document).ready(function () {
                         }
                     });
                 }
-            }
+                $('#submitButton').prop('disabled', false);
+            },
         });
     });
 

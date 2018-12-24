@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
@@ -52,6 +53,7 @@ public class DefaultVerificationTokenService implements VerificationTokenService
     }
 
     @Override
+    @Transactional(propagation = Propagation.NOT_SUPPORTED) // do not invoke method inside transaction
     public void sendTokenToUser(User user, String appUrl) {
         Optional<VerificationToken> tokenOptional = getTokenByUser(user);
         if (tokenOptional.isPresent()) {

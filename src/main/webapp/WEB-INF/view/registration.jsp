@@ -40,7 +40,7 @@
 
             <div class="js-error js-errors-message"></div>
 
-            <button type="submit">Sign Up</button>
+            <button id="submitButton" type="submit">Sign Up</button>
             <span class="js-register-message register-message">
                 Verification link was sent to your email
             </span>

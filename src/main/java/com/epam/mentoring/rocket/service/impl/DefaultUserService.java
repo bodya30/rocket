@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,9 @@ public class DefaultUserService implements UserService, UserDetailsService {
 
     @Autowired
     private VerificationTokenService tokenService;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> getUserById(Long id) {
@@ -70,10 +74,16 @@ public class DefaultUserService implements UserService, UserDetailsService {
         if (getUserByEmail(email).isPresent()) {
             throw new EmailExistsException("User with email" + email + "already exists");
         }
+        encodeUserPassword(user);
         User insertedUser = userDao.insertUser(user);
         insertUserAuthorities(user);
         tokenService.insertTokenForUser(user);
         return insertedUser;
+    }
+
+    private void encodeUserPassword(User user) {
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
     }
 
     private void insertUserAuthorities(User user) {
@@ -134,5 +144,13 @@ public class DefaultUserService implements UserService, UserDetailsService {
 
     public void setAuthorityDao(AuthorityDao authorityDao) {
         this.authorityDao = authorityDao;
+    }
+
+    public PasswordEncoder getPasswordEncoder() {
+        return passwordEncoder;
+    }
+
+    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
     }
 }
