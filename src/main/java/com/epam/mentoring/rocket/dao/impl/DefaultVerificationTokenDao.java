@@ -4,6 +4,7 @@ import com.epam.mentoring.rocket.dao.VerificationTokenDao;
 import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.model.VerificationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -16,6 +17,7 @@ import java.sql.ResultSet;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+@Profile("jdbc")
 @Repository
 public class DefaultVerificationTokenDao implements VerificationTokenDao {
 
