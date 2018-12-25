@@ -47,19 +47,19 @@ public class DefaultAuthorityDao implements AuthorityDao {
     }
 
     @Override
-    public int insertAuthorityForUser(Authority authority, User user) {
+    public void insertAuthorityForUser(Authority authority, User user) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", user.getId())
                 .addValue("authorityId", authority.getId());
-        return jdbcTemplate.update(INSERT_AUTHORITY_FOR_USER, params);
+        jdbcTemplate.update(INSERT_AUTHORITY_FOR_USER, params);
     }
 
     @Override
-    public int removeAuthorityForUser(Authority authority, User user) {
+    public void removeAuthorityForUser(Authority authority, User user) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", user.getId())
                 .addValue("authorityId", authority.getId());
-        return jdbcTemplate.update(DELETE_AUTHORITY_FOR_USER, params);
+        jdbcTemplate.update(DELETE_AUTHORITY_FOR_USER, params);
     }
 
     private RowMapper<Authority> getRowMapper() {

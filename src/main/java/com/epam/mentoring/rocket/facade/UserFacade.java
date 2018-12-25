@@ -15,9 +15,9 @@ public interface UserFacade {
 
     UserData insertUser(UserData user);
 
-    int updateUser(UserData user);
+    void updateUser(UserData user);
 
-    int removeUser(Long id);
+    void removeUser(Long id);
 
     void activateUser(UserData user);
 }

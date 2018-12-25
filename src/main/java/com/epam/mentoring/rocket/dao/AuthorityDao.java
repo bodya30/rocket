@@ -12,7 +12,7 @@ public interface AuthorityDao {
 
     List<Authority> getAuthoritiesByUserId(Long id);
 
-    int insertAuthorityForUser(Authority authority, User user);
+    void insertAuthorityForUser(Authority authority, User user);
 
-    int removeAuthorityForUser(Authority authority, User user);
+    void removeAuthorityForUser(Authority authority, User user);
 }

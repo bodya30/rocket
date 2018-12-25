@@ -51,13 +51,13 @@ public class DefaultUserFacade implements UserFacade {
     }
 
     @Override
-    public int updateUser(UserData user) {
-        return userService.updateUser(userReverseConverter.reverseConvert(user));
+    public void updateUser(UserData user) {
+        userService.updateUser(userReverseConverter.reverseConvert(user));
     }
 
     @Override
-    public int removeUser(Long id) {
-        return userService.removeUser(id);
+    public void removeUser(Long id) {
+        userService.removeUser(id);
     }
 
     @Override

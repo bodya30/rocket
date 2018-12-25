@@ -70,7 +70,7 @@ public class DefaultUserDao implements UserDao {
     }
 
     @Override
-    public int updateUser(User user) {
+    public void updateUser(User user) {
         Map<String, Object> params = new HashMap<>();
         params.put("id", user.getId());
         params.put("firstName", user.getFirstName());
@@ -78,12 +78,12 @@ public class DefaultUserDao implements UserDao {
         params.put("email", user.getEmail());
         params.put("password", user.getPassword());
         params.put("enabled", user.isEnabled());
-        return jdbcTemplate.update(UPDATE_USER, params);
+        jdbcTemplate.update(UPDATE_USER, params);
     }
 
     @Override
-    public int removeUser(Long id) {
-        return jdbcTemplate.update(REMOVE_USER, new MapSqlParameterSource("id", id));
+    public void removeUser(Long id) {
+        jdbcTemplate.update(REMOVE_USER, new MapSqlParameterSource("id", id));
     }
 
     private RowMapper<User> getRowMapper() {

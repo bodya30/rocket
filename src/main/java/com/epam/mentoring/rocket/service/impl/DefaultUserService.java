@@ -97,20 +97,17 @@ public class DefaultUserService implements UserService, UserDetailsService {
     }
 
     @Override
-    public int updateUser(User user) {
-        return userDao.updateUser(user);
+    public void updateUser(User user) {
+        userDao.updateUser(user);
     }
 
     @Override
-    public int removeUser(Long id) {
-        int removedQuantity = 0;
+    public void removeUser(Long id) {
         Optional<User> userOptional = getUserById(id);
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             emptyIfNull(user.getAuthorities()).forEach(authority -> authorityDao.removeAuthorityForUser(authority, user));
-            removedQuantity = userDao.removeUser(id);
         }
-        return removedQuantity;
     }
 
     @Override
