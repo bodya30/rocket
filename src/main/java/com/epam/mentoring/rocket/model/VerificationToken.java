@@ -1,12 +1,30 @@
 package com.epam.mentoring.rocket.model;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 import java.util.Date;
 
+@Entity
+@Table(name = "token")
 public class VerificationToken {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
     private String token;
+
+    @OneToOne(optional = false)
     private User user;
+
+    @Column(name = "expiration")
+    @Temporal(TemporalType.TIMESTAMP)
     private Date expiryDate;
 
     public VerificationToken() {

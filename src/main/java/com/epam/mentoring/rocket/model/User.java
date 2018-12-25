@@ -1,15 +1,34 @@
 package com.epam.mentoring.rocket.model;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
 import java.util.List;
 
+@Entity
+@Table(name = "user")
 public class User {
 
+    @Id
+    @GeneratedValue
     private Long id;
+
+    @Column(name = "first_name")
     private String firstName;
+
+    @Column(name = "last_name")
     private String lastName;
+
     private String email;
     private String password;
     private boolean enabled;
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
     private List<Authority> authorities;
 
     public User() {
