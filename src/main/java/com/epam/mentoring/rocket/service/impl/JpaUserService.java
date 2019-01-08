@@ -8,7 +8,6 @@ import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,9 +31,6 @@ public class JpaUserService extends AbstractUserService {
 
     @Autowired
     private VerificationTokenService tokenService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> getUserById(Long id) {
@@ -62,11 +58,6 @@ public class JpaUserService extends AbstractUserService {
         User insertedUser = userDao.insertUser(user);
         tokenService.insertTokenForUser(user);
         return insertedUser;
-    }
-
-    private void encodeUserPassword(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
     }
 
     private void updateUserAuthoritiesIfEmpty(User user) {
@@ -105,13 +96,5 @@ public class JpaUserService extends AbstractUserService {
 
     public void setTokenService(VerificationTokenService tokenService) {
         this.tokenService = tokenService;
-    }
-
-    public PasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
-    }
-
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
     }
 }

@@ -9,7 +9,6 @@ import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,9 +34,6 @@ public class DefaultUserService extends AbstractUserService {
 
     @Autowired
     private VerificationTokenService tokenService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
 
     @Override
     public Optional<User> getUserById(Long id) {
@@ -75,11 +71,6 @@ public class DefaultUserService extends AbstractUserService {
         insertUserAuthorities(user);
         tokenService.insertTokenForUser(user);
         return insertedUser;
-    }
-
-    private void encodeUserPassword(User user) {
-        String encodedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encodedPassword);
     }
 
     private void insertUserAuthorities(User user) {
@@ -124,11 +115,4 @@ public class DefaultUserService extends AbstractUserService {
         this.authorityDao = authorityDao;
     }
 
-    public PasswordEncoder getPasswordEncoder() {
-        return passwordEncoder;
-    }
-
-    public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
-        this.passwordEncoder = passwordEncoder;
-    }
 }
