@@ -1,5 +1,6 @@
 package com.epam.mentoring.rocket.service.impl;
 
+import com.epam.mentoring.rocket.dao.AuthorityDao;
 import com.epam.mentoring.rocket.dao.UserDao;
 import com.epam.mentoring.rocket.exception.EmailExistsException;
 import com.epam.mentoring.rocket.model.Authority;
@@ -14,8 +15,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.mentoring.rocket.model.AuthorityName.ROLE_USER;
+import static java.util.Collections.singleton;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
-import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 
 @Profile("jpa")
 @Service
@@ -23,7 +25,10 @@ import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
 public class JpaUserService extends AbstractUserService {
 
     @Autowired
-    private UserDao jpaUserDao;
+    private UserDao userDao;
+
+    @Autowired
+    private AuthorityDao authorityDao;
 
     @Autowired
     private VerificationTokenService tokenService;
@@ -33,17 +38,17 @@ public class JpaUserService extends AbstractUserService {
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return Optional.ofNullable(jpaUserDao.getUserById(id));
+        return Optional.ofNullable(userDao.getUserById(id));
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(jpaUserDao.getUserByEmail(email));
+        return Optional.ofNullable(userDao.getUserByEmail(email));
     }
 
     @Override
     public List<User> getAllUsers() {
-        return jpaUserDao.getAllUsers();
+        return userDao.getAllUsers();
     }
 
     @Override
@@ -53,37 +58,45 @@ public class JpaUserService extends AbstractUserService {
             throw new EmailExistsException("User with email" + email + "already exists");
         }
         encodeUserPassword(user);
-        // TODO: 25.12.2018 Manage User - Authority relation
-        User insertedUser = jpaUserDao.insertUser(user);
+        updateUserAuthoritiesIfEmpty(user);
+        User insertedUser = userDao.insertUser(user);
         tokenService.insertTokenForUser(user);
         return insertedUser;
     }
-
 
     private void encodeUserPassword(User user) {
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
     }
 
+    private void updateUserAuthoritiesIfEmpty(User user) {
+        if (isEmpty(user.getAuthorities())) {
+            Authority authority = authorityDao.getAuthorityByName(ROLE_USER);
+            user.setAuthorities(singleton(authority));
+        }
+    }
+
     @Override
     public void updateUser(User user) {
-        jpaUserDao.updateUser(user);
+        userDao.updateUser(user);
     }
 
     @Override
     public void removeUser(Long id) {
         Optional<User> userOptional = getUserById(id);
         if (userOptional.isPresent()) {
-            jpaUserDao.removeUser(userOptional.get().getId());
+            User user = userOptional.get();
+            tokenService.removeTokenForUser(user);
+            userDao.removeUser(user.getId());
         }
     }
 
-    public UserDao getJpaUserDao() {
-        return jpaUserDao;
+    public UserDao getUserDao() {
+        return userDao;
     }
 
-    public void setJpaUserDao(UserDao jpaUserDao) {
-        this.jpaUserDao = jpaUserDao;
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
     }
 
     public VerificationTokenService getTokenService() {

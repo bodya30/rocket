@@ -8,10 +8,10 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public abstract class AbstractUserService implements UserService, UserDetailsService {
 
@@ -24,7 +24,7 @@ public abstract class AbstractUserService implements UserService, UserDetailsSer
                 getGrantedAuthorities(user.getAuthorities()));
     }
 
-    private static List<GrantedAuthority> getGrantedAuthorities(List<Authority> roles) {
+    private static List<GrantedAuthority> getGrantedAuthorities(Set<Authority> roles) {
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (Authority role : roles) {
             authorities.add(new SimpleGrantedAuthority(role.getName().name()));

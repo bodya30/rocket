@@ -25,6 +25,7 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     private static final String INSERT_TOKEN = "INSERT INTO token (token, user, expiration) VALUES (:token, :userId, :expiration);";
     private static final String SELECT_BY_TOKEN = "SELECT * FROM token AS t WHERE t.token LIKE :token;";
     private static final String SELECT_BY_USER = "SELECT * FROM token AS t WHERE t.user = :userId;";
+    private static final String REMOVE_BY_USER = "DELETE FROM token WHERE user = :userId;";
 
     @Autowired
     private NamedParameterJdbcTemplate jdbcTemplate;
@@ -62,6 +63,11 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     private String formatDate(Date date) {
         SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
         return sdf.format(date);
+    }
+
+    @Override
+    public void removeTokenForUser(User user) {
+        jdbcTemplate.update(REMOVE_BY_USER, new MapSqlParameterSource("userId", user.getId()));
     }
 
     public NamedParameterJdbcTemplate getJdbcTemplate() {

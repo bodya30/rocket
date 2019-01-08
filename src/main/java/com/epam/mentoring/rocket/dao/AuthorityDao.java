@@ -4,13 +4,13 @@ import com.epam.mentoring.rocket.model.Authority;
 import com.epam.mentoring.rocket.model.AuthorityName;
 import com.epam.mentoring.rocket.model.User;
 
-import java.util.List;
+import java.util.Set;
 
 public interface AuthorityDao {
 
     Authority getAuthorityByName(AuthorityName name);
 
-    List<Authority> getAuthoritiesByUserId(Long id);
+    Set<Authority> getAuthoritiesByUserId(Long id);
 
     void insertAuthorityForUser(Authority authority, User user);
 

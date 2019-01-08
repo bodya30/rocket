@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Profile("jdbc")
 @Repository
@@ -41,9 +43,10 @@ public class DefaultAuthorityDao implements AuthorityDao {
     }
 
     @Override
-    public List<Authority> getAuthoritiesByUserId(Long userId) {
-        return jdbcTemplate.query(SELECT_AUTHORITIES_BY_USER_ID,
+    public Set<Authority> getAuthoritiesByUserId(Long userId) {
+        List<Authority> authorities = jdbcTemplate.query(SELECT_AUTHORITIES_BY_USER_ID,
                 new MapSqlParameterSource("id", userId), getRowMapper());
+        return new HashSet<>(authorities);
     }
 
     @Override

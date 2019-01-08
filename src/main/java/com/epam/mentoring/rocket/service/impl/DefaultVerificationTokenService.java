@@ -99,6 +99,11 @@ public class DefaultVerificationTokenService implements VerificationTokenService
         return new Date(cal.getTime().getTime());
     }
 
+    @Override
+    public void removeTokenForUser(User user) {
+        tokenDao.removeTokenForUser(user);
+    }
+
     public VerificationTokenDao getTokenDao() {
         return tokenDao;
     }

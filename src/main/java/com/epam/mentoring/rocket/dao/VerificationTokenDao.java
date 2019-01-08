@@ -10,4 +10,6 @@ public interface VerificationTokenDao {
     VerificationToken getTokenByUser(User user);
 
     VerificationToken insertToken(VerificationToken token);
+
+    void removeTokenForUser(User user);
 }

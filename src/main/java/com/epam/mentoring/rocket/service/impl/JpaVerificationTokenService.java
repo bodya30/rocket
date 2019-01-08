@@ -87,6 +87,11 @@ public class JpaVerificationTokenService implements VerificationTokenService {
         return builder.toString();
     }
 
+    @Override
+    public void removeTokenForUser(User user) {
+        tokenDao.removeTokenForUser(user);
+    }
+
     public VerificationTokenDao getTokenDao() {
         return tokenDao;
     }

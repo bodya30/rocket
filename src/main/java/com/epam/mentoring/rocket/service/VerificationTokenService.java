@@ -13,5 +13,7 @@ public interface VerificationTokenService {
 
     Optional<VerificationToken> getTokenByUser(User user);
 
+    void removeTokenForUser(User user);
+
     void sendTokenToUser(User user, String appUrl);
 }

@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import static org.apache.commons.collections4.CollectionUtils.emptyIfNull;
 import static org.apache.commons.collections4.CollectionUtils.isNotEmpty;
@@ -58,7 +59,7 @@ public class DefaultUserService extends AbstractUserService {
     }
 
     private User setUserAuthorities(User user) {
-        List<Authority> authorities = authorityDao.getAuthoritiesByUserId(user.getId());
+        Set<Authority> authorities = authorityDao.getAuthoritiesByUserId(user.getId());
         user.setAuthorities(authorities);
         return user;
     }
@@ -82,7 +83,7 @@ public class DefaultUserService extends AbstractUserService {
     }
 
     private void insertUserAuthorities(User user) {
-        List<Authority> authorities = user.getAuthorities();
+        Set<Authority> authorities = user.getAuthorities();
         if (isNotEmpty(authorities)) {
             authorities.forEach(authority -> authorityDao.insertAuthorityForUser(authority, user));
         } else {
@@ -102,6 +103,8 @@ public class DefaultUserService extends AbstractUserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             emptyIfNull(user.getAuthorities()).forEach(authority -> authorityDao.removeAuthorityForUser(authority, user));
+            tokenService.removeTokenForUser(user);
+            userDao.removeUser(id);
         }
     }
 

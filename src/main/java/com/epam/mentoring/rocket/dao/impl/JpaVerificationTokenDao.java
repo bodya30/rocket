@@ -51,6 +51,12 @@ public class JpaVerificationTokenDao implements VerificationTokenDao {
         return token;
     }
 
+    @Override
+    public void removeTokenForUser(User user) {
+        VerificationToken token = getTokenByUser(user);
+        entityManager.remove(token);
+    }
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
