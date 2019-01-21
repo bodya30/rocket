@@ -1,8 +1,11 @@
 package com.epam.mentoring.rocket.service.impl;
 
+import com.epam.mentoring.rocket.dao.AuthorityDao;
+import com.epam.mentoring.rocket.dao.UserDao;
 import com.epam.mentoring.rocket.model.Authority;
 import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.service.UserService;
+import com.epam.mentoring.rocket.service.VerificationTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,6 +22,15 @@ import java.util.Set;
 
 @Service
 public abstract class AbstractUserService implements UserService, UserDetailsService {
+
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
+    private AuthorityDao authorityDao;
+
+    @Autowired
+    private VerificationTokenService tokenService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -51,5 +63,29 @@ public abstract class AbstractUserService implements UserService, UserDetailsSer
 
     public void setPasswordEncoder(PasswordEncoder passwordEncoder) {
         this.passwordEncoder = passwordEncoder;
+    }
+
+    public UserDao getUserDao() {
+        return userDao;
+    }
+
+    public void setUserDao(UserDao userDao) {
+        this.userDao = userDao;
+    }
+
+    public AuthorityDao getAuthorityDao() {
+        return authorityDao;
+    }
+
+    public void setAuthorityDao(AuthorityDao authorityDao) {
+        this.authorityDao = authorityDao;
+    }
+
+    public VerificationTokenService getTokenService() {
+        return tokenService;
+    }
+
+    public void setTokenService(VerificationTokenService tokenService) {
+        this.tokenService = tokenService;
     }
 }
