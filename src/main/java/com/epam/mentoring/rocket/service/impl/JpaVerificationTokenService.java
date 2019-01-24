@@ -8,19 +8,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@Profile("jpa")
+@Profile({"jpa", "springdata"})
 @Service
 @Transactional
 public class JpaVerificationTokenService extends AbstractVerificationTokenService {
 
     @Override
     public Optional<VerificationToken> getTokenByTokenString(String token) {
-        return Optional.ofNullable(getTokenDao().getTokenByTokenString(token));
+        return Optional.ofNullable(getTokenDao().findByToken(token));
     }
 
     @Override
     public Optional<VerificationToken> getTokenByUser(User user) {
-        return Optional.ofNullable(getTokenDao().getTokenByUser(user));
+        return Optional.ofNullable(getTokenDao().findByUser(user));
     }
 
 }

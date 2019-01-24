@@ -33,7 +33,7 @@ public class DefaultAuthorityDao implements AuthorityDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public Authority getAuthorityByName(AuthorityName authorityName) {
+    public Authority findByName(AuthorityName authorityName) {
         try {
             return jdbcTemplate.queryForObject(SELECT_AUTHORITY_BY_NAME,
                     new MapSqlParameterSource("name", authorityName.name()), getRowMapper());
@@ -43,7 +43,7 @@ public class DefaultAuthorityDao implements AuthorityDao {
     }
 
     @Override
-    public Set<Authority> getAuthoritiesByUserId(Long userId) {
+    public Set<Authority> findById(Long userId) {
         List<Authority> authorities = jdbcTemplate.query(SELECT_AUTHORITIES_BY_USER_ID,
                 new MapSqlParameterSource("id", userId), getRowMapper());
         return new HashSet<>(authorities);

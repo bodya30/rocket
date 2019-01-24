@@ -17,6 +17,7 @@ import java.sql.ResultSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Profile("jdbc")
 @Repository
@@ -33,30 +34,30 @@ public class DefaultUserDao implements UserDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public User getUserById(Long id) {
+    public Optional<User> findById(Long id) {
         try {
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new MapSqlParameterSource("id", id), getRowMapper());
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_ID, new MapSqlParameterSource("id", id), getRowMapper()));
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         try {
-            return jdbcTemplate.queryForObject(SELECT_USER_BY_EMAL, new MapSqlParameterSource("email", email), getRowMapper());
+            return Optional.ofNullable(jdbcTemplate.queryForObject(SELECT_USER_BY_EMAL, new MapSqlParameterSource("email", email), getRowMapper()));
         } catch (EmptyResultDataAccessException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> findAll() {
         return jdbcTemplate.query(SELECT_ALL_USERS, getRowMapper());
     }
 
     @Override
-    public User insertUser(User user) {
+    public User save(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         SqlParameterSource params = new MapSqlParameterSource()
                 .addValue("firstName", user.getFirstName())
@@ -82,7 +83,7 @@ public class DefaultUserDao implements UserDao {
     }
 
     @Override
-    public void removeUser(Long id) {
+    public void removeById(Long id) {
         jdbcTemplate.update(REMOVE_USER, new MapSqlParameterSource("id", id));
     }
 

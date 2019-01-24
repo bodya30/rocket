@@ -14,24 +14,24 @@ import static com.epam.mentoring.rocket.model.AuthorityName.ROLE_USER;
 import static java.util.Collections.singleton;
 import static org.apache.commons.collections4.CollectionUtils.isEmpty;
 
-@Profile("jpa")
+@Profile({"jpa", "springdata"})
 @Service
 @Transactional
 public class JpaUserService extends AbstractUserService {
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return Optional.ofNullable(getUserDao().getUserById(id));
+        return getUserDao().findById(id);
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(getUserDao().getUserByEmail(email));
+        return getUserDao().findByEmail(email);
     }
 
     @Override
     public List<User> getAllUsers() {
-        return getUserDao().getAllUsers();
+        return getUserDao().findAll();
     }
 
     @Override
@@ -42,14 +42,14 @@ public class JpaUserService extends AbstractUserService {
         }
         encodeUserPassword(user);
         updateUserAuthoritiesIfEmpty(user);
-        User insertedUser = getUserDao().insertUser(user);
+        User insertedUser = getUserDao().save(user);
         getTokenService().insertTokenForUser(user);
         return insertedUser;
     }
 
     private void updateUserAuthoritiesIfEmpty(User user) {
         if (isEmpty(user.getAuthorities())) {
-            Authority authority = getAuthorityDao().getAuthorityByName(ROLE_USER);
+            Authority authority = getAuthorityDao().findByName(ROLE_USER);
             user.setAuthorities(singleton(authority));
         }
     }
@@ -65,7 +65,7 @@ public class JpaUserService extends AbstractUserService {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
             getTokenService().removeTokenForUser(user);
-            getUserDao().removeUser(user.getId());
+            getUserDao().removeById(user.getId());
         }
     }
 }

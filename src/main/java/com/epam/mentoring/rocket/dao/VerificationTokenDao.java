@@ -5,11 +5,11 @@ import com.epam.mentoring.rocket.model.VerificationToken;
 
 public interface VerificationTokenDao {
 
-    VerificationToken getTokenByTokenString(String token);
+    VerificationToken findByToken(String token);
 
-    VerificationToken getTokenByUser(User user);
+    VerificationToken findByUser(User user);
 
-    VerificationToken insertToken(VerificationToken token);
+    VerificationToken save(VerificationToken token);
 
-    void removeTokenForUser(User user);
+    void removeByUser(User user);
 }

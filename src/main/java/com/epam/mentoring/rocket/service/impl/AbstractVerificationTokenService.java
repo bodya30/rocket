@@ -42,7 +42,7 @@ public abstract class AbstractVerificationTokenService implements VerificationTo
         token.setUser(user);
         token.setToken(UUID.randomUUID().toString());
         token.setExpiryDate(calculateExpiryDate());
-        return tokenDao.insertToken(token);
+        return tokenDao.save(token);
     }
 
     private Date calculateExpiryDate() {
@@ -79,7 +79,7 @@ public abstract class AbstractVerificationTokenService implements VerificationTo
 
     @Override
     public void removeTokenForUser(User user) {
-        getTokenDao().removeTokenForUser(user);
+        getTokenDao().removeByUser(user);
     }
 
     public VerificationTokenDao getTokenDao() {

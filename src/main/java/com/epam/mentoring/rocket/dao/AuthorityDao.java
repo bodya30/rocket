@@ -8,9 +8,9 @@ import java.util.Set;
 
 public interface AuthorityDao {
 
-    Authority getAuthorityByName(AuthorityName name);
+    Authority findByName(AuthorityName name);
 
-    Set<Authority> getAuthoritiesByUserId(Long id);
+    Set<Authority> findById(Long id);
 
     void insertAuthorityForUser(Authority authority, User user);
 

@@ -22,7 +22,7 @@ public class JpaVerificationTokenDao implements VerificationTokenDao {
     private EntityManager entityManager;
 
     @Override
-    public VerificationToken getTokenByTokenString(String token) {
+    public VerificationToken findByToken(String token) {
         try {
             TypedQuery<VerificationToken> query = entityManager.createQuery(SELECT_BY_TOKEN, VerificationToken.class);
             query.setParameter("token", token);
@@ -34,7 +34,7 @@ public class JpaVerificationTokenDao implements VerificationTokenDao {
     }
 
     @Override
-    public VerificationToken getTokenByUser(User user) {
+    public VerificationToken findByUser(User user) {
         try {
             TypedQuery<VerificationToken> query = entityManager.createQuery(SELECT_BY_USER, VerificationToken.class);
             query.setParameter("user", user);
@@ -46,14 +46,14 @@ public class JpaVerificationTokenDao implements VerificationTokenDao {
     }
 
     @Override
-    public VerificationToken insertToken(VerificationToken token) {
+    public VerificationToken save(VerificationToken token) {
         entityManager.persist(token);
         return token;
     }
 
     @Override
-    public void removeTokenForUser(User user) {
-        VerificationToken token = getTokenByUser(user);
+    public void removeByUser(User user) {
+        VerificationToken token = findByUser(user);
         entityManager.remove(token);
     }
 

@@ -14,7 +14,6 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
-import java.util.Optional;
 import java.util.Set;
 
 @Profile("jpa")
@@ -31,7 +30,7 @@ public class JpaAuthorityDao implements AuthorityDao {
     private UserDao userDao;
 
     @Override
-    public Authority getAuthorityByName(AuthorityName name) {
+    public Authority findByName(AuthorityName name) {
         try {
             TypedQuery<Authority> query = entityManager.createQuery(SELECT_AUTHORITY_BY_NAME, Authority.class);
             query.setParameter("name", name);
@@ -42,8 +41,8 @@ public class JpaAuthorityDao implements AuthorityDao {
     }
 
     @Override
-    public Set<Authority> getAuthoritiesByUserId(Long id) {
-        return Optional.ofNullable(userDao.getUserById(id))
+    public Set<Authority> findById(Long id) {
+        return userDao.findById(id)
                 .map(User::getAuthorities)
                 .orElseThrow(() -> new IllegalArgumentException("No user with id " + id + "found"));
     }

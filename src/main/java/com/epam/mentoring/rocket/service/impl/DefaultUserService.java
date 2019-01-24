@@ -24,17 +24,17 @@ public class DefaultUserService extends AbstractUserService {
 
     @Override
     public Optional<User> getUserById(Long id) {
-        return Optional.ofNullable(getUserDao().getUserById(id)).map(this::setUserAuthorities);
+        return getUserDao().findById(id).map(this::setUserAuthorities);
     }
 
     @Override
     public Optional<User> getUserByEmail(String email) {
-        return Optional.ofNullable(getUserDao().getUserByEmail(email)).map(this::setUserAuthorities);
+        return getUserDao().findByEmail(email).map(this::setUserAuthorities);
     }
 
     @Override
     public List<User> getAllUsers() {
-        List<User> users = getUserDao().getAllUsers();
+        List<User> users = getUserDao().findAll();
         if (isNotEmpty(users)) {
             users.forEach(this::setUserAuthorities);
         }
@@ -42,7 +42,7 @@ public class DefaultUserService extends AbstractUserService {
     }
 
     private User setUserAuthorities(User user) {
-        Set<Authority> authorities = getAuthorityDao().getAuthoritiesByUserId(user.getId());
+        Set<Authority> authorities = getAuthorityDao().findById(user.getId());
         user.setAuthorities(authorities);
         return user;
     }
@@ -54,7 +54,7 @@ public class DefaultUserService extends AbstractUserService {
             throw new EmailExistsException("User with email" + email + "already exists");
         }
         encodeUserPassword(user);
-        User insertedUser = getUserDao().insertUser(user);
+        User insertedUser = getUserDao().save(user);
         insertUserAuthorities(user);
         getTokenService().insertTokenForUser(user);
         return insertedUser;
@@ -65,7 +65,7 @@ public class DefaultUserService extends AbstractUserService {
         if (isNotEmpty(authorities)) {
             authorities.forEach(authority -> getAuthorityDao().insertAuthorityForUser(authority, user));
         } else {
-            Authority defaultAuthority = getAuthorityDao().getAuthorityByName(DEFAULT_AUTHORITY_NAME);
+            Authority defaultAuthority = getAuthorityDao().findByName(DEFAULT_AUTHORITY_NAME);
             getAuthorityDao().insertAuthorityForUser(defaultAuthority, user);
         }
     }
@@ -82,7 +82,7 @@ public class DefaultUserService extends AbstractUserService {
             User user = userOptional.get();
             emptyIfNull(user.getAuthorities()).forEach(authority -> getAuthorityDao().removeAuthorityForUser(authority, user));
             getTokenService().removeTokenForUser(user);
-            getUserDao().removeUser(id);
+            getUserDao().removeById(id);
         }
     }
 

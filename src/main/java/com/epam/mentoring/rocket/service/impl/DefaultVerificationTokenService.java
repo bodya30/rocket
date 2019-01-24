@@ -20,16 +20,17 @@ public class DefaultVerificationTokenService extends AbstractVerificationTokenSe
 
     @Override
     public Optional<VerificationToken> getTokenByTokenString(String token) {
-        return Optional.ofNullable(getTokenDao().getTokenByTokenString(token)).map(this::setUser);
+        return Optional.ofNullable(getTokenDao().findByToken(token)).map(this::setUser);
     }
 
     @Override
     public Optional<VerificationToken> getTokenByUser(User user) {
-        return Optional.ofNullable(getTokenDao().getTokenByUser(user)).map(this::setUser);
+        return Optional.ofNullable(getTokenDao().findByUser(user)).map(this::setUser);
     }
 
     private VerificationToken setUser(VerificationToken token) {
-        User user = userDao.getUserById(token.getUser().getId());
+        User user = userDao.findById(token.getUser().getId())
+                .orElseThrow(() -> new IllegalStateException("User for token must not be empty"));
         token.setUser(user);
         return token;
     }

@@ -3,18 +3,19 @@ package com.epam.mentoring.rocket.dao;
 import com.epam.mentoring.rocket.model.User;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserDao {
 
-    User getUserById(Long id);
+    Optional<User> findById(Long id);
 
-    User getUserByEmail(String email);
+    Optional<User> findByEmail(String email);
 
-    List<User> getAllUsers();
+    List<User> findAll();
 
-    User insertUser(User user);
+    User save(User user);
 
     void updateUser(User user);
 
-    void removeUser(Long id);
+    void removeById(Long id);
 }

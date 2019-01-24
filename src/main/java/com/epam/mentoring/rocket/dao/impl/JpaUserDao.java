@@ -11,6 +11,7 @@ import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
+import java.util.Optional;
 
 
 @Profile("jpa")
@@ -24,28 +25,28 @@ public class JpaUserDao implements UserDao {
     private EntityManager entityManager;
 
     @Override
-    public User getUserById(Long id) {
-        return entityManager.find(User.class, id);
+    public Optional<User> findById(Long id) {
+        return Optional.ofNullable(entityManager.find(User.class, id));
     }
 
     @Override
-    public User getUserByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         try {
             TypedQuery<User> query = entityManager.createQuery(SELECT_USER_BY_EMAL, User.class);
             query.setParameter("email", email);
-            return query.getSingleResult();
+            return Optional.ofNullable(query.getSingleResult());
         } catch (NoResultException e) {
-            return null;
+            return Optional.empty();
         }
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<User> findAll() {
         return entityManager.createQuery(SELECT_ALL_USERS).getResultList();
     }
 
     @Override
-    public User insertUser(User user) {
+    public User save(User user) {
         entityManager.persist(user);
         return user;
     }
@@ -56,8 +57,8 @@ public class JpaUserDao implements UserDao {
     }
 
     @Override
-    public void removeUser(Long id) {
-        entityManager.remove(getUserById(id));
+    public void removeById(Long id) {
+        entityManager.remove(findById(id));
     }
 
     public EntityManager getEntityManager() {

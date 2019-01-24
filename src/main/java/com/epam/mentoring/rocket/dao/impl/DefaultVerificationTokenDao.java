@@ -31,7 +31,7 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     private NamedParameterJdbcTemplate jdbcTemplate;
 
     @Override
-    public VerificationToken getTokenByTokenString(String token) {
+    public VerificationToken findByToken(String token) {
         try {
             return jdbcTemplate.queryForObject(SELECT_BY_TOKEN, new MapSqlParameterSource("token", token), getRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -40,7 +40,7 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     }
 
     @Override
-    public VerificationToken getTokenByUser(User user) {
+    public VerificationToken findByUser(User user) {
         try {
             return jdbcTemplate.queryForObject(SELECT_BY_USER, new MapSqlParameterSource("userId", user.getId()), getRowMapper());
         } catch (EmptyResultDataAccessException e) {
@@ -49,7 +49,7 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     }
 
     @Override
-    public VerificationToken insertToken(VerificationToken token) {
+    public VerificationToken save(VerificationToken token) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("token", token.getToken())
@@ -66,7 +66,7 @@ public class DefaultVerificationTokenDao implements VerificationTokenDao {
     }
 
     @Override
-    public void removeTokenForUser(User user) {
+    public void removeByUser(User user) {
         jdbcTemplate.update(REMOVE_BY_USER, new MapSqlParameterSource("userId", user.getId()));
     }
 
