@@ -58,7 +58,7 @@ public class JpaUserDao implements UserDao {
 
     @Override
     public void removeById(Long id) {
-        entityManager.remove(findById(id));
+        findById(id).ifPresent(entityManager::remove);
     }
 
     public EntityManager getEntityManager() {
