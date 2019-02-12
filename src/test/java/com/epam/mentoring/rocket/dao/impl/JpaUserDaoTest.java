@@ -16,7 +16,7 @@ import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -66,14 +66,17 @@ public class JpaUserDaoTest {
         assertEquals(user, userOptional.get(), "No user found");
     }
 
-    @DisplayName("Throw exception when no user with email found")
+    @DisplayName("Do not find user by email")
     @Test
     public void shouldNotFindUserByEmailAndThrowException() {
         TypedQuery<User> query = mock(TypedQuery.class);
         when(entityManager.createQuery(SELECT_USER_BY_EMAL, User.class)).thenReturn(query);
         when(query.getSingleResult()).thenThrow(NoResultException.class);
 
-        assertThrows(NoResultException.class, () -> unit.findByEmail(USER_EMAIL));
+        Optional<User> userOptional = unit.findByEmail(USER_EMAIL);
+
+        verify(query).setParameter("email", USER_EMAIL);
+        assertFalse(userOptional.isPresent());
     }
 
     @DisplayName("Find all users")

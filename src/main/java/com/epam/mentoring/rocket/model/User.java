@@ -94,4 +94,32 @@ public class User {
     public void setAuthorities(Set<Authority> authorities) {
         this.authorities = authorities;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof User)) return false;
+
+        User user = (User) o;
+
+        if (isEnabled() != user.isEnabled()) return false;
+        if (!getId().equals(user.getId())) return false;
+        if (!getFirstName().equals(user.getFirstName())) return false;
+        if (!getLastName().equals(user.getLastName())) return false;
+        if (!getEmail().equals(user.getEmail())) return false;
+        if (!getPassword().equals(user.getPassword())) return false;
+        return getAuthorities().equals(user.getAuthorities());
+    }
+
+    @Override
+    public int hashCode() {
+        int result = getId().hashCode();
+        result = 31 * result + getFirstName().hashCode();
+        result = 31 * result + getLastName().hashCode();
+        result = 31 * result + getEmail().hashCode();
+        result = 31 * result + getPassword().hashCode();
+        result = 31 * result + (isEnabled() ? 1 : 0);
+        result = 31 * result + getAuthorities().hashCode();
+        return result;
+    }
 }
