@@ -23,7 +23,7 @@ class RegistrationControllerIntegrationTest {
 
     private static final String USER_FIRST_NAME = "firstName";
     private static final String USER_LAST_NAME = "lastName";
-    private static final String USER_EMAIL = "user@email.com";
+    private static final String USER_EMAIL = "bo.tkach@gmail.com";
     private static final String USER_PASSWORD = "passworD2";
 
     @Autowired
