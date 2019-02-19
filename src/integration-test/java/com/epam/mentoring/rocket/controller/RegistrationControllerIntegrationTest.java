@@ -3,6 +3,7 @@ package com.epam.mentoring.rocket.controller;
 import com.epam.mentoring.rocket.form.RegistrationForm;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
+@Disabled
 class RegistrationControllerIntegrationTest {
 
     private static final String USER_FIRST_NAME = "firstName";
