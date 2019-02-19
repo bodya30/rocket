@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @AutoConfigureMockMvc
-@Disabled
+@Disabled("Because private google app key needed for successful result")
 class RegistrationControllerIntegrationTest {
 
     private static final String USER_FIRST_NAME = "firstName";
