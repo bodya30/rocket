@@ -48,6 +48,8 @@ dependencies {
 	implementation('javax.servlet:jstl')
 	implementation('org.springframework.security:spring-security-taglibs')
 	implementation('org.passay:passay:1.2.0')
+    implementation('org.springframework.social:spring-social-web:1.1.6.RELEASE')
+    implementation('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtime('mysql:mysql-connector-java:5.1.39')
 	runtimeOnly('org.springframework.boot:spring-boot-starter-tomcat')

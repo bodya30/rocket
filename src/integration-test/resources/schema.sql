@@ -21,6 +21,7 @@ DROP TABLE IF EXISTS `user_authority`;
 DROP TABLE IF EXISTS `authority`;
 DROP TABLE IF EXISTS `token`;
 DROP TABLE IF EXISTS `user`;
+DROP TABLE IF EXISTS `userconnection`;
 
 --
 -- Table structure for table `authority`
@@ -97,4 +98,37 @@ CREATE TABLE `user_authority` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2019-02-06 22:37:26
+--
+-- Table structure for table `userconnection`
+--
+
+DROP TABLE IF EXISTS `userconnection`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `userconnection` (
+  `userId` varchar(255) NOT NULL,
+  `providerId` varchar(255) NOT NULL,
+  `providerUserId` varchar(255) NOT NULL,
+  `rank` int(11) NOT NULL,
+  `displayName` varchar(255) DEFAULT NULL,
+  `profileUrl` varchar(512) DEFAULT NULL,
+  `imageUrl` varchar(512) DEFAULT NULL,
+  `accessToken` varchar(512) NOT NULL,
+  `secret` varchar(255) DEFAULT NULL,
+  `refreshToken` varchar(512) DEFAULT NULL,
+  `expireTime` bigint(20) DEFAULT NULL,
+  PRIMARY KEY (`userId`,`providerId`,`providerUserId`),
+  UNIQUE KEY `UserConnectionRank` (`userId`,`providerId`,`rank`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2019-04-28 14:42:43

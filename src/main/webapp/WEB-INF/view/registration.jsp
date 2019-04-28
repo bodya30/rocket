@@ -1,8 +1,10 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ taglib prefix = "c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix = "sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="sec" uri="http://www.springframework.org/security/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url var="registerUrl" value="/registration/register"/>
+<c:url var="facebookRegUrl" value="/signin/facebook"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -45,6 +47,11 @@
                 Verification link was sent to your email
             </span>
         </form>
+        <form:form id="facebookRegistration" action="${facebookRegUrl}" method="post">
+            <button type="submit">
+                facebook
+            </button>
+        </form:form>
         <script src="${contextPath}/static/js/jquery-3.3.1.min.js"></script>
         <script src="${contextPath}/static/js/main.js"></script>
     </body>
