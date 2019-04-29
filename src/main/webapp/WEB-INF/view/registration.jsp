@@ -5,6 +5,7 @@
 
 <c:url var="registerUrl" value="/registration/register"/>
 <c:url var="facebookRegUrl" value="/signin/facebook"/>
+<c:url var="githubLogUrl" value="/signin/github"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -51,6 +52,12 @@
             <form:form action="${facebookRegUrl}" method="post">
                 <button id="facebookButton" type="submit">Facebook</button>
             </form:form>
+            <form:form action="${githubLogUrl}" method="post">
+                <button id="githubButton" type="submit">Github</button>
+            </form:form>
+            <c:if test="${param.error}">
+                <span>Your ${connection.key.providerId} account does not have public email.</span>
+            </c:if>
         </div>
         <script src="${contextPath}/static/js/jquery-3.3.1.min.js"></script>
         <script src="${contextPath}/static/js/main.js"></script>

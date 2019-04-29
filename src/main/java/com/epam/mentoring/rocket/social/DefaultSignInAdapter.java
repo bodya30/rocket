@@ -1,4 +1,4 @@
-package com.epam.mentoring.rocket.social.facebook;
+package com.epam.mentoring.rocket.social;
 
 import com.epam.mentoring.rocket.model.AuthorityName;
 import com.epam.mentoring.rocket.model.User;
@@ -18,10 +18,10 @@ import java.util.Optional;
 import static java.util.Collections.singleton;
 
 @Component
-public class FacebookSignInAdapter implements SignInAdapter {
+public class DefaultSignInAdapter implements SignInAdapter {
 
-    @Value("${spring.social.facebook.user.disabled.url}")
-    private String fbUserDisabledUrl;
+    @Value("${spring.social.user.disabled.url}")
+    private String accountDisabledUrl;
 
     @Autowired
     private UserService userService;
@@ -32,18 +32,18 @@ public class FacebookSignInAdapter implements SignInAdapter {
         if (userOptional.isPresent()) {
             return signInIfUserEnabled(userOptional.get());
         } else {
-            return fbUserDisabledUrl;
+            return accountDisabledUrl;
         }
     }
 
     private String signInIfUserEnabled(User user) {
         if (user.isEnabled()) {
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(AuthorityName.ROLE_FACEBOOK_USER.name());
+            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(AuthorityName.ROLE_SOCIAL_USER.name());
             SecurityContextHolder.getContext().setAuthentication(new UsernamePasswordAuthenticationToken(user.getId(),
                     null, singleton(authority)));
             return null;
         } else {
-            return fbUserDisabledUrl;
+            return accountDisabledUrl;
         }
     }
 }

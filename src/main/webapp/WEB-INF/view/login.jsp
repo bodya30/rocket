@@ -5,6 +5,7 @@
 
 <c:url var="loginUrl" value="/login"/>
 <c:url var="facebookLogUrl" value="/signin/facebook"/>
+<c:url var="githubLogUrl" value="/signin/github"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -36,10 +37,13 @@
         </form:form>
         <form:form action="${facebookLogUrl}" method="post">
             <button id="facebookButton" type="submit">Facebook</button>
-            <c:if test="${param.fberror != null}">
-                <span>No such facebook user found</span>
-            </c:if>
         </form:form>
+        <form:form action="${githubLogUrl}" method="post">
+            <button id="githubButton" type="submit">Github</button>
+        </form:form>
+        <c:if test="${param.socialerror != null}">
+            <span>No such social account found</span>
+        </c:if>
     </div>
 
     <script src="${contextPath}/static/js/jquery-3.3.1.min.js"></script>

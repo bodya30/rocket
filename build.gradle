@@ -6,9 +6,7 @@ buildscript {
 	}
 	repositories {
 		mavenCentral()
-		maven {
-			url "https://plugins.gradle.org/m2/"
-		}
+		maven { url "https://plugins.gradle.org/m2/" }
 	}
 	dependencies {
 		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}",
@@ -30,6 +28,7 @@ sourceCompatibility = 1.8
 
 repositories {
 	mavenCentral()
+	maven { url "http://repo.spring.io/milestone/" }
 }
 
 testSets {
@@ -49,7 +48,8 @@ dependencies {
 	implementation('org.springframework.security:spring-security-taglibs')
 	implementation('org.passay:passay:1.2.0')
     implementation('org.springframework.social:spring-social-web:1.1.6.RELEASE')
-    implementation('org.springframework.social:spring-social-facebook:2.0.3.RELEASE')
+    implementation('org.springframework.social:spring-social-facebook:3.0.0.M3')
+    implementation('org.springframework.social:spring-social-github:1.0.0.M4')
 	runtimeOnly('org.springframework.boot:spring-boot-devtools')
 	runtime('mysql:mysql-connector-java:5.1.39')
 	runtimeOnly('org.springframework.boot:spring-boot-starter-tomcat')

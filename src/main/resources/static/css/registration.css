@@ -82,7 +82,6 @@ button {
     border-radius: 5px;
     width: 100%;
     border: 1px solid #4bc970;
-    border-width: 1px 1px 3px;
     box-shadow: 0 -1px 0 rgba(255,255,255,0.1) inset;
     margin-bottom: 10px;
 }
@@ -103,4 +102,8 @@ label {
 #facebookButton{
     background-color: #4267b2;
     border: #4267b2;
+}
+#githubButton{
+    background-color: #24292e;
+    border: #24292e;
 }
