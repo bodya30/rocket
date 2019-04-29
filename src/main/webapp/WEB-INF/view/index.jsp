@@ -16,9 +16,11 @@
         <link rel='shortcut icon' type='image/x-icon' href='favicon.ico' />
     </head>
     <body>
-        <form:form id="logoutForm" action="${logoutUrl}" method="post">
-            <h1>You are successfully authenticated!</h1>
-            <button type="submit">Logout</button>
-        </form:form>
+        <div class="form-container">
+            <form:form id="logoutForm" action="${logoutUrl}" method="post">
+                <h1>You are successfully authenticated!</h1>
+                <button type="submit">Logout</button>
+            </form:form>
+        </div>
     </body>
 </html>

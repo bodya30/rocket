@@ -4,6 +4,7 @@
 <%@ taglib prefix = "form" uri="http://www.springframework.org/tags/form" %>
 
 <c:url var="loginUrl" value="/login"/>
+<c:url var="facebookLogUrl" value="/signin/facebook"/>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
@@ -17,21 +18,29 @@
     <link rel="shortcut icon" type="image/x-icon" href="${contextPath}/static/favicon.ico" />
 </head>
 <body>
-    <form:form id="loginForm" action="${loginUrl}" method="post">
-        <h1>Login</h1>
-        <label for="email">Email:</label>
-        <input id="email" name="email" type="email" maxlength="255" placeholder="your@email.com"/>
+    <div class="form-container">
+        <form:form id="loginForm" action="${loginUrl}" method="post">
+            <h1>Login</h1>
+            <label for="email">Email:</label>
+            <input id="email" name="email" type="email" maxlength="255" placeholder="your@email.com"/>
 
-        <label for="password">Password:</label>
-        <input id="password" name="password" type="password" maxlength="30" placeholder="Password"/>
+            <label for="password">Password:</label>
+            <input id="password" name="password" type="password" maxlength="30" placeholder="Password"/>
 
-        <div class="js-error js-errors-message"></div>
+            <div class="js-error js-errors-message"></div>
 
-        <button type="submit">Sign Up</button>
-        <c:if test="${param.error != null}">
-            <span>Invalid email or passowrd</span>
-        </c:if>
-    </form:form>
+            <button type="submit">Sign In</button>
+            <c:if test="${param.error != null}">
+                <span>Invalid email or passowrd</span>
+            </c:if>
+        </form:form>
+        <form:form action="${facebookLogUrl}" method="post">
+            <button id="facebookButton" type="submit">Facebook</button>
+            <c:if test="${param.fberror != null}">
+                <span>No such facebook user found</span>
+            </c:if>
+        </form:form>
+    </div>
 
     <script src="${contextPath}/static/js/jquery-3.3.1.min.js"></script>
     </body>
