@@ -44,16 +44,22 @@
 
                 <div class="js-error js-errors-message"></div>
 
-                <button id="submitButton" type="submit">Sign Up</button>
+                <button id="submitButton" type="submit">Sign up</button>
                 <span class="js-register-message register-message">
                     Verification link was sent to your email
                 </span>
             </form>
             <form:form action="${facebookRegUrl}" method="post">
-                <button id="facebookButton" type="submit">Facebook</button>
+                <button id="facebookButton" type="submit">
+                    <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
+                    Sign up with Facebook
+                </button>
             </form:form>
             <form:form action="${githubLogUrl}" method="post">
-                <button id="githubButton" type="submit">Github</button>
+                <button id="githubButton" type="submit">
+                    <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
+                    Sign up with Github
+                </button>
             </form:form>
             <c:if test="${param.error}">
                 <span>Your ${connection.key.providerId} account does not have public email.</span>

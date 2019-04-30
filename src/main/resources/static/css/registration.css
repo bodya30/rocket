@@ -107,3 +107,8 @@ label {
     background-color: #24292e;
     border: #24292e;
 }
+
+#facebookIcon, #githubIcon{
+    width: 18px;
+    vertical-align: sub;
+}

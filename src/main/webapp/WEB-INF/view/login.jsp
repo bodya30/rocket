@@ -30,16 +30,22 @@
 
             <div class="js-error js-errors-message"></div>
 
-            <button type="submit">Sign In</button>
+            <button type="submit">Sign in</button>
             <c:if test="${param.error != null}">
                 <span>Invalid email or passowrd</span>
             </c:if>
         </form:form>
         <form:form action="${facebookLogUrl}" method="post">
-            <button id="facebookButton" type="submit">Facebook</button>
+            <button id="facebookButton" type="submit">
+                <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
+                Sign in with Facebook
+            </button>
         </form:form>
         <form:form action="${githubLogUrl}" method="post">
-            <button id="githubButton" type="submit">Github</button>
+            <button id="githubButton" type="submit">
+                <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
+                Sign in with Github
+            </button>
         </form:form>
         <c:if test="${param.socialerror != null}">
             <span>No such social account found</span>
