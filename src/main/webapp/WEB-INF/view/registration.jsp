@@ -49,18 +49,20 @@
                     Verification link was sent to your email
                 </span>
             </form>
-            <form:form action="${facebookRegUrl}" method="post">
-                <button id="facebookButton" type="submit">
-                    <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
-                    Sign up with Facebook
-                </button>
-            </form:form>
-            <form:form action="${githubLogUrl}" method="post">
-                <button id="githubButton" type="submit">
-                    <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
-                    Sign up with Github
-                </button>
-            </form:form>
+            <div class="button-container">
+                <form:form cssClass="button-form" action="${facebookRegUrl}" method="post">
+                    <button id="facebookButton" type="submit">
+                        <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
+                        Sign up with Facebook
+                    </button>
+                </form:form>
+                <form:form cssClass="button-form" action="${githubLogUrl}" method="post">
+                    <button id="githubButton" type="submit">
+                        <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
+                        Sign up with Github
+                    </button>
+                </form:form>
+            </div>
             <c:if test="${param.error}">
                 <span>Your ${connection.key.providerId} account does not have public email.</span>
             </c:if>

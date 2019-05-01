@@ -35,18 +35,20 @@
                 <span>Invalid email or passowrd</span>
             </c:if>
         </form:form>
-        <form:form action="${facebookLogUrl}" method="post">
-            <button id="facebookButton" type="submit">
-                <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
-                Sign in with Facebook
-            </button>
-        </form:form>
-        <form:form action="${githubLogUrl}" method="post">
-            <button id="githubButton" type="submit">
-                <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
-                Sign in with Github
-            </button>
-        </form:form>
+        <div class="button-container">
+            <form:form cssClass="button-form" action="${facebookLogUrl}" method="post">
+                <button id="facebookButton" type="submit">
+                    <img id="facebookIcon" src="${contextPath}/static/facebook-button.svg"/>
+                    Sign in with Facebook
+                </button>
+            </form:form>
+            <form:form cssClass="button-form" action="${githubLogUrl}" method="post">
+                <button id="githubButton" type="submit">
+                    <img id="githubIcon" src="${contextPath}/static/github-button.svg"/>
+                    Sign in with Github
+                </button>
+            </form:form>
+        </div>
         <c:if test="${param.socialerror != null}">
             <span>No such social account found</span>
         </c:if>

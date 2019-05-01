@@ -99,16 +99,29 @@ label {
 
 }
 
-#facebookButton{
+#facebookButton {
     background-color: #4267b2;
     border: #4267b2;
 }
-#githubButton{
+
+#githubButton {
     background-color: #24292e;
     border: #24292e;
+    margin-left: 4%;
 }
 
-#facebookIcon, #githubIcon{
+#facebookIcon, #githubIcon {
     width: 18px;
     vertical-align: sub;
+}
+
+.button-container {
+    width: 100%;
+    text-align: center;
+    overflow: auto;
+}
+
+.button-form {
+    float: left;
+    width: 49%;
 }
