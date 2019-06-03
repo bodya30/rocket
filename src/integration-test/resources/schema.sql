@@ -45,8 +45,8 @@ CREATE TABLE `authority` (
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `user` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `first_name` varchar(255) NOT NULL,
-  `last_name` varchar(255) NOT NULL,
+  `first_name` varchar(255),
+  `last_name` varchar(255),
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
   `enabled` bit(1) NOT NULL,
