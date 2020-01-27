@@ -2,9 +2,11 @@ package com.epam.mentoring.rocket.service.impl;
 
 import com.epam.mentoring.rocket.model.User;
 import com.epam.mentoring.rocket.model.VerificationToken;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureTestEntityManager;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -42,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class JpaUserServiceIntegrationTest {
 
     private static final String SELECT_BY_USER = "SELECT t FROM VerificationToken t WHERE t.user = :user";
+    private static final String USE_DATABASE = "USE %s;";
     private static final Long USER_ID = 1L;
     private static final String FIRST_NAME = "firstName";
     private static final String LAST_NAME = "lastName";
@@ -54,6 +57,15 @@ public class JpaUserServiceIntegrationTest {
 
     @Autowired
     private JpaUserService unit;
+
+    @Value("${db.schema.name}")
+    private String dbSchemaName;
+
+    @BeforeEach
+    public void setUpDatasource() {
+        String query = String.format(USE_DATABASE, dbSchemaName);
+        testEntityManager.getEntityManager().createNativeQuery(query).executeUpdate();
+    }
 
     private User getInsertedUserFromDb() {
         return testEntityManager.find(User.class, USER_ID);
