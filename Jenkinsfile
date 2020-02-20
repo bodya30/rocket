@@ -46,9 +46,34 @@ pipeline {
                 }
             }
         }
+        stage('start DB') {
+            when { environment name: 'UNIX', value: 'true' }
+            steps {
+                sh '''
+                    if [ ! "$(docker ps -q -f name=localhost)" ]; then
+                        if [ "$(docker ps -aq -f status=exited -f name=localhost)" ]; then
+                            docker rm localhost
+                        fi
+                    docker run -d -p 3306:3306 --name localhost -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=rocket_test mysql:5.7
+                    fi
+                '''
+            }
+        }
         stage('integration tests') {
             steps {
                 execute('gradlew --no-daemon integrationTest')
+            }
+        }
+        stage('update docker image') {
+            when { environment name: 'UNIX', value: 'true' }
+            steps {
+                sh '''
+                    docker login -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
+                    docker build --no-cache -t rocket .
+                    docker tag rocket:latest boderto/rocket:latest
+                    docker push boderto/rocket:latest
+                    docker rmi rocket:latest
+               '''
             }
         }
     }
