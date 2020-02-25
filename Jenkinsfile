@@ -20,6 +20,7 @@ pipeline {
     parameters {
         booleanParam(name: 'Unit_tests', defaultValue: true, description: 'Include Unit Tests into pipeline')
         booleanParam(name: 'Integration_tests', defaultValue: true, description: 'Include Integration Tests into pipeline')
+        string(name: 'DB_server', defaultValue: 'localhost', description: 'Data base server name')
     }
     stages {
         stage('checkout master') {
@@ -52,24 +53,24 @@ pipeline {
             }
         }
         stage('start DB') {
-            when { 
+            when {
                 environment name: 'UNIX', value: 'true'
-                expression { return params.Integration_tests} 
+                expression { return params.Integration_tests}
             }
             steps {
                 sh '''
-                    if [ ! "$(docker ps -q -f name=localhost)" ]; then
-                        if [ "$(docker ps -aq -f status=exited -f name=localhost)" ]; then
-                            docker rm localhost
+                    if [ ! "$(docker ps -q -f name=${DB_server})" ]; then
+                        if [ "$(docker ps -aq -f status=exited -f name=${DB_server})" ]; then
+                            docker rm ${DB_server}
                         fi
-                    docker run -d -p 3306:3306 --name localhost -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=rocket mysql:5.7
+                    docker run -d -p 3306:3306 --name ${DB_server} -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=rocket mysql:5.7
                     fi
                 '''
             }
         }
         stage('integration tests') {
-            when { 
-                expression { return params.Integration_tests} 
+            when {
+                expression { return params.Integration_tests}
             }
             steps {
                 execute('gradlew --no-daemon integrationTest')
@@ -79,8 +80,8 @@ pipeline {
                     script {
                         if (Boolean.valueOf(env.UNIX)) {
                             sh '''
-                                if [ "$(docker ps -q -f name=localhost)" ]; then
-                                    docker stop localhost
+                                if [ "$(docker ps -q -f name=${DB_server})" ]; then
+                                    docker stop ${DB_server}
                                 fi
                             '''
                         }
