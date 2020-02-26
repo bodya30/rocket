@@ -1,3 +1,5 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
 	ext {
 		springBootVersion = '2.1.1.RELEASE'
@@ -33,6 +35,14 @@ repositories {
 
 testSets {
 	integrationTest { dirName = 'integration-test' }
+}
+
+processResources {
+	project.properties.findAll().each { prop ->
+		if (prop.value != null) {
+			filter(ReplaceTokens, tokens: [prop.key: prop.value])
+		}
+	}
 }
 
 dependencies {
