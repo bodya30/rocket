@@ -1,5 +1,5 @@
-CREATE DATABASE  IF NOT EXISTS `rocket`;
-USE `rocket`;
+CREATE DATABASE  IF NOT EXISTS `@database.schema@`;
+USE `@database.schema@`;
 
 DROP TABLE IF EXISTS `user_authority`;
 DROP TABLE IF EXISTS `authority`;

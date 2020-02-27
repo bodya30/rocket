@@ -58,7 +58,7 @@ public class JpaUserServiceIntegrationTest {
     @Autowired
     private JpaUserService unit;
 
-    @Value("${db.schema.name}")
+    @Value("${database.test.schema}")
     private String dbSchemaName;
 
     @BeforeEach

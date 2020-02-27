@@ -21,6 +21,8 @@ pipeline {
         booleanParam(name: 'Unit_tests', defaultValue: true, description: 'Include Unit Tests into pipeline')
         booleanParam(name: 'Integration_tests', defaultValue: true, description: 'Include Integration Tests into pipeline')
         string(name: 'DB_server', defaultValue: 'localhost', description: 'Data base server name')
+        string(name: 'DB_port', defaultValue: '3306', description: 'Data base port')
+        string(name: 'DB_schema', defaultValue: 'rocket', description: 'Data base schema')
     }
     stages {
         stage('checkout master') {
@@ -37,7 +39,7 @@ pipeline {
         }
         stage('build') {
             steps {
-                execute('gradlew --no-daemon build -x test')
+                execute('gradlew --no-daemon build -x test -Pdatabase.server=${DB_server} -Pdatabase.port=${DB_port} -Pdatabase.schema=${DB_schema}')
             }
         }
         stage('unit tests') {
@@ -63,7 +65,7 @@ pipeline {
                         if [ "$(docker ps -aq -f status=exited -f name=${DB_server})" ]; then
                             docker rm ${DB_server}
                         fi
-                    docker run -d -p 3306:3306 --name ${DB_server} -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=rocket mysql:5.7
+                    docker run -d -p ${DB_port}:3306 --name ${DB_server} -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=${DB_schema} mysql:5.7
                     fi
                 '''
             }
